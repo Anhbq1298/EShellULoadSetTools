@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using EShellULoadSetTools.Models;
 using EShellULoadSetTools.Services;
@@ -25,6 +26,7 @@ namespace EShellULoadSetTools.ViewModels
         private string _currentLengthUnit = "Length";
         private string _currentForceUnit = "Force";
         private string _currentTemperatureUnit = "Temperature";
+        private readonly List<UniformLoadSetNodeViewModel> _trackedLeafNodes = new();
 
         /// <summary>
         /// Root nodes of the TreeView.
@@ -32,6 +34,12 @@ namespace EShellULoadSetTools.ViewModels
         /// "Shell Uniform Load Sets".
         /// </summary>
         public ObservableCollection<UniformLoadSetNodeViewModel> RootNodes { get; }
+
+        /// <summary>
+        /// Records corresponding to either the currently selected node or the set of nodes
+        /// explicitly pinned by the user via the TreeView checkboxes.
+        /// </summary>
+        public ObservableCollection<ShellUniformLoadSetRecord> SelectedRecords { get; }
 
         /// <summary>
         /// Currently selected node in the TreeView. This is used by the View
@@ -45,6 +53,7 @@ namespace EShellULoadSetTools.ViewModels
                 if (_selectedNode == value) return;
                 _selectedNode = value;
                 OnPropertyChanged();
+                RefreshSelectedRecords();
             }
         }
 
@@ -120,6 +129,7 @@ namespace EShellULoadSetTools.ViewModels
             _etabsConnectionService = etabsConnectionService ??
                 throw new ArgumentNullException(nameof(etabsConnectionService));
             RootNodes = new ObservableCollection<UniformLoadSetNodeViewModel>();
+            SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
         }
 
         /// <summary>
@@ -148,6 +158,7 @@ namespace EShellULoadSetTools.ViewModels
                 .OrderBy(g => g.Key);
 
             RootNodes.Clear();
+            UnregisterLeafNodeHandlers();
 
             // Root node: "Shell Uniform Load Sets"
             var root = new UniformLoadSetNodeViewModel("Shell Uniform Load Sets");
@@ -157,12 +168,109 @@ namespace EShellULoadSetTools.ViewModels
                 // Each child node represents one set (ULoadSet1, ULoadSet2, ...)
                 var childNode = new UniformLoadSetNodeViewModel(group.Key, group);
                 root.Children.Add(childNode);
+                RegisterLeafNodeHandler(childNode);
             }
 
             RootNodes.Add(root);
 
             // Optionally select the first child by default
             SelectedNode = root.Children.FirstOrDefault();
+            RefreshSelectedRecords();
+        }
+
+        private void RegisterLeafNodeHandler(UniformLoadSetNodeViewModel node)
+        {
+            if (node.Children.Count > 0)
+            {
+                foreach (var child in node.Children)
+                {
+                    RegisterLeafNodeHandler(child);
+                }
+
+                return;
+            }
+
+            node.PropertyChanged += LeafNodeOnPropertyChanged;
+            _trackedLeafNodes.Add(node);
+        }
+
+        private void UnregisterLeafNodeHandlers()
+        {
+            foreach (var node in _trackedLeafNodes)
+            {
+                node.PropertyChanged -= LeafNodeOnPropertyChanged;
+            }
+
+            _trackedLeafNodes.Clear();
+        }
+
+        private void LeafNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(UniformLoadSetNodeViewModel.IsPinned))
+            {
+                RefreshSelectedRecords();
+            }
+        }
+
+        private void RefreshSelectedRecords()
+        {
+            var pinnedNodes = GetLeafNodes()
+                .Where(n => n.IsPinned && n.HasRecords)
+                .OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            IEnumerable<UniformLoadSetNodeViewModel> nodesToDisplay;
+
+            if (pinnedNodes.Count > 0)
+            {
+                nodesToDisplay = pinnedNodes;
+            }
+            else if (SelectedNode != null && SelectedNode.HasRecords)
+            {
+                nodesToDisplay = new[] { SelectedNode };
+            }
+            else
+            {
+                SelectedRecords.Clear();
+                return;
+            }
+
+            SelectedRecords.Clear();
+            foreach (var node in nodesToDisplay)
+            {
+                foreach (var record in node.Records)
+                {
+                    SelectedRecords.Add(record);
+                }
+            }
+        }
+
+        private IEnumerable<UniformLoadSetNodeViewModel> GetLeafNodes()
+        {
+            foreach (var node in RootNodes)
+            {
+                foreach (var leaf in GetLeafNodes(node))
+                {
+                    yield return leaf;
+                }
+            }
+        }
+
+        private IEnumerable<UniformLoadSetNodeViewModel> GetLeafNodes(UniformLoadSetNodeViewModel node)
+        {
+            if (node.Children.Count == 0)
+            {
+                yield return node;
+                yield break;
+            }
+
+            foreach (var child in node.Children)
+            {
+                foreach (var leaf in GetLeafNodes(child))
+                {
+                    yield return leaf;
+                }
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ namespace EShellULoadSetTools.ViewModels
     public class UniformLoadSetNodeViewModel : BaseViewModel
     {
         private string _name;
+        private bool _isPinned;
 
         /// <summary>
         /// Text shown in the TreeView.
@@ -45,6 +46,27 @@ namespace EShellULoadSetTools.ViewModels
         /// This is the Model data: shellUniformLoadSetName, loadSetLoadPattern, loadPatternValue.
         /// </summary>
         public ObservableCollection<ShellUniformLoadSetRecord> Records { get; }
+
+        /// <summary>
+        /// Indicates whether this node has been explicitly selected (checked) by the user
+        /// so that its records appear in the detail grid together with other checked nodes.
+        /// </summary>
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set
+            {
+                if (_isPinned == value) return;
+                _isPinned = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Helper property used by the View to know whether the node represents an actual
+        /// load set (leaf node) and therefore should present checkboxes to the user.
+        /// </summary>
+        public bool HasRecords => Records.Count > 0;
 
         public UniformLoadSetNodeViewModel(
             string name,

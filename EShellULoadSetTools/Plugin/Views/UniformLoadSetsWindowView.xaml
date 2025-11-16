@@ -10,6 +10,7 @@
         Width="600"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <!-- Right-aligned numeric cell style -->
         <Style x:Key="RightAlignedCellStyle" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
@@ -70,14 +71,20 @@
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type vm:UniformLoadSetNodeViewModel}"
                                               ItemsSource="{Binding Children}">
-                        <TextBlock Text="{Binding Name}" />
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Margin="0,0,4,0"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding HasRecords, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      IsChecked="{Binding IsPinned, Mode=TwoWay}" />
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
 
             <!-- DataGrid showing patterns and values for the selected set -->
             <DataGrid Grid.Column="1"
-                      ItemsSource="{Binding SelectedNode.Records}"
+                      ItemsSource="{Binding SelectedRecords}"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       CanUserAddRows="False"
@@ -85,6 +92,9 @@
                       HeadersVisibility="Column"
                       Margin="8,0,0,0">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name"
+                                        Binding="{Binding ShellUniformLoadSetName}"
+                                        Width="*" />
                     <DataGridTextColumn Header="Load Pattern"
                                         Binding="{Binding LoadSetLoadPattern}"
                                         Width="*" />
