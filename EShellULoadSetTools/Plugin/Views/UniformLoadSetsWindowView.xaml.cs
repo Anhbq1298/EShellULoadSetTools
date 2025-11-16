@@ -34,5 +34,21 @@ namespace EShellULoadSetTools.Views
                 viewModel.SelectedNode = e.NewValue as UniformLoadSetNodeViewModel;
             }
         }
+
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is UniformLoadSetsViewModel viewModel)
+            {
+                viewModel.SelectAllLeafNodes();
+            }
+        }
+
+        private void DeselectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is UniformLoadSetsViewModel viewModel)
+            {
+                viewModel.DeselectAllLeafNodes();
+            }
+        }
     }
 }
