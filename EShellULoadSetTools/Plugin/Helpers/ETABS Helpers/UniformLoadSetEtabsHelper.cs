@@ -189,15 +189,13 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
             try
             {
                 string fileName = string.Empty;
-                int ret = sapModel.GetModelFilename(ref fileName);
+                fileName = sapModel.GetModelFilename();
 
-                if (ret == 0 && !string.IsNullOrWhiteSpace(fileName))
-                {
-                    string displayName = Path.GetFileName(fileName);
-                    return string.IsNullOrWhiteSpace(displayName)
-                        ? fileName
-                        : displayName;
-                }
+                string displayName = Path.GetFileName(fileName);
+
+                return string.IsNullOrWhiteSpace(displayName)
+                    ? fileName
+                    : displayName;
             }
             catch
             {
