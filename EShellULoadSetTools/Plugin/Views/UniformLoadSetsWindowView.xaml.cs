@@ -1,5 +1,5 @@
 // -------------------------------------------------------------
-// File    : UniformLoadSetsWindow.xaml.cs
+// File    : UniformLoadSetsWindowView.xaml.cs
 // Author  : Anh Bui
 // Purpose : Simple WPF Window acting as View for Shell Uniform Load Sets.
 // -------------------------------------------------------------
@@ -10,9 +10,9 @@ using EShellULoadSetTools.ViewModels;
 
 namespace EShellULoadSetTools.Views
 {
-    public partial class UniformLoadSetsWindow : Window
+    public partial class UniformLoadSetsWindowView : Window
     {
-        public UniformLoadSetsWindow()
+        public UniformLoadSetsWindowView()
         {
             InitializeComponent();
         }

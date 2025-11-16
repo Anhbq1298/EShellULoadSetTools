@@ -34,7 +34,7 @@ namespace EShellULoadSetTools
                 viewModel.LoadFromSapModel(SapModel);
 
                 // Create WPF Window as View.
-                var window = new UniformLoadSetsWindow
+                var window = new UniformLoadSetsWindowView
                 {
                     DataContext = viewModel,
                     Title = "Shell Uniform Load Sets",
