@@ -20,6 +20,8 @@ namespace EShellULoadSetTools.ViewModels
     {
         private readonly IEtabsConnectionService _etabsConnectionService;
         private UniformLoadSetNodeViewModel? _selectedNode;
+        private string _currentModelFileName = "(Unknown Model)";
+        private string _currentAreaLoadUnit = "Force/Length\u00B2";
 
         /// <summary>
         /// Root nodes of the TreeView.
@@ -43,6 +45,42 @@ namespace EShellULoadSetTools.ViewModels
             }
         }
 
+        /// <summary>
+        /// Display name of the ETABS model currently connected to the plugin.
+        /// </summary>
+        public string CurrentModelFileName
+        {
+            get => _currentModelFileName;
+            private set
+            {
+                if (_currentModelFileName == value) return;
+                _currentModelFileName = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentModelInfoText));
+            }
+        }
+
+        /// <summary>
+        /// Display string for the active ETABS force/area units.
+        /// </summary>
+        public string CurrentAreaLoadUnit
+        {
+            get => _currentAreaLoadUnit;
+            private set
+            {
+                if (_currentAreaLoadUnit == value) return;
+                _currentAreaLoadUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentModelInfoText));
+            }
+        }
+
+        /// <summary>
+        /// Combined information text shown in the window header.
+        /// </summary>
+        public string CurrentModelInfoText =>
+            $"Current Model: {CurrentModelFileName}, Current Unit: {CurrentAreaLoadUnit}";
+
         public UniformLoadSetsViewModel(IEtabsConnectionService etabsConnectionService)
         {
             _etabsConnectionService = etabsConnectionService ??
@@ -62,6 +100,9 @@ namespace EShellULoadSetTools.ViewModels
             // 1) Read full model data from ETABS: one record per pattern/value.
             IReadOnlyList<ShellUniformLoadSetRecord> records =
                 _etabsConnectionService.GetShellUniformLoadSetRecords();
+
+            CurrentModelFileName = _etabsConnectionService.GetModelFileName();
+            CurrentAreaLoadUnit = _etabsConnectionService.GetAreaLoadUnitString();
 
             // 2) Group by shellUniformLoadSetName for the tree.
             var groups = records
