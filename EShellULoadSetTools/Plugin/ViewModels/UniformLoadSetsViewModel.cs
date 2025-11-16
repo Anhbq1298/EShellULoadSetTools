@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ETABSv1;
-using EShellULoadSetTools.Helpers.ETABSHelpers;
 using EShellULoadSetTools.Models;
+using EShellULoadSetTools.Services;
 
 namespace EShellULoadSetTools.ViewModels
 {
@@ -19,6 +18,7 @@ namespace EShellULoadSetTools.ViewModels
     /// </summary>
     public class UniformLoadSetsViewModel : BaseViewModel
     {
+        private readonly IEtabsConnectionService _etabsConnectionService;
         private UniformLoadSetNodeViewModel? _selectedNode;
 
         /// <summary>
@@ -43,22 +43,25 @@ namespace EShellULoadSetTools.ViewModels
             }
         }
 
-        public UniformLoadSetsViewModel()
+        public UniformLoadSetsViewModel(IEtabsConnectionService etabsConnectionService)
         {
+            _etabsConnectionService = etabsConnectionService ??
+                throw new ArgumentNullException(nameof(etabsConnectionService));
             RootNodes = new ObservableCollection<UniformLoadSetNodeViewModel>();
         }
 
         /// <summary>
-        /// Load the Shell Uniform Load Sets from the given ETABS model
-        /// and populate the tree structure.
+        /// Load the Shell Uniform Load Sets from the ETABS model provided by
+        /// the connection service and populate the tree structure.
         /// </summary>
-        public void LoadFromSapModel(cSapModel sapModel)
+        public void LoadFromEtabs()
         {
-            if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
+            if (!_etabsConnectionService.IsInitialized)
+                throw new InvalidOperationException("ETABS connection has not been initialized.");
 
             // 1) Read full model data from ETABS: one record per pattern/value.
-            List<ShellUniformLoadSetRecord> records =
-                UniformLoadSetEtabsHelper.GetShellUniformLoadSetRecords(sapModel);
+            IReadOnlyList<ShellUniformLoadSetRecord> records =
+                _etabsConnectionService.GetShellUniformLoadSetRecords();
 
             // 2) Group by shellUniformLoadSetName for the tree.
             var groups = records

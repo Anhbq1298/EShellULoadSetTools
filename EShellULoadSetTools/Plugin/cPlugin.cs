@@ -9,6 +9,7 @@
 using System;
 using System.Windows;
 using ETABSv1;
+using EShellULoadSetTools.Services;
 using EShellULoadSetTools.ViewModels;
 using EShellULoadSetTools.Views;
 
@@ -29,9 +30,12 @@ namespace EShellULoadSetTools
         {
             try
             {
+                var etabsConnectionService = new EtabsConnectionService();
+                etabsConnectionService.Initialize(SapModel);
+
                 // Create ViewModel and load Shell Uniform Load Sets from ETABS.
-                var viewModel = new UniformLoadSetsViewModel();
-                viewModel.LoadFromSapModel(SapModel);
+                var viewModel = new UniformLoadSetsViewModel(etabsConnectionService);
+                viewModel.LoadFromEtabs();
 
                 // Create WPF Window as View.
                 var window = new UniformLoadSetsWindow
