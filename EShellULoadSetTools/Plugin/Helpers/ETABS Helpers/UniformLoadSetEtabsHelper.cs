@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using ETABSv1;
 using EShellULoadSetTools.Models;
 
@@ -174,5 +175,37 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
 
             return "Force/Length\u00B2";
         }
+
+
+        /// <summary>
+        /// Retrieves the current ETABS model file name (without the full path)
+        /// for display purposes. Returns a friendly fallback if the model has
+        /// not been saved yet or if the API call fails.
+        /// </summary>
+        internal static string GetModelFileName(cSapModel sapModel)
+        {
+            if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
+
+            try
+            {
+                string fileName = string.Empty;
+                int ret = sapModel.GetModelFilename(ref fileName);
+
+                if (ret == 0 && !string.IsNullOrWhiteSpace(fileName))
+                {
+                    string displayName = Path.GetFileName(fileName);
+                    return string.IsNullOrWhiteSpace(displayName)
+                        ? fileName
+                        : displayName;
+                }
+            }
+            catch
+            {
+                // Ignore and fall through to the fallback text below.
+            }
+
+            return "(Unsaved Model)";
+        }
+
     }
 }
