@@ -33,8 +33,21 @@ namespace EShellULoadSetTools
                 var etabsConnectionService = new EtabsConnectionService();
                 etabsConnectionService.Initialize(SapModel);
 
+                ICSISafeConnectionService? safeConnectionService = null;
+                try
+                {
+                    safeConnectionService = new CSISafeConnectionService();
+                    safeConnectionService.Initialize();
+                }
+                catch
+                {
+                    safeConnectionService = null;
+                }
+
                 // Create ViewModel and load Shell Uniform Load Sets from ETABS.
-                var viewModel = new UniformLoadSetsViewModel(etabsConnectionService);
+                var viewModel = new UniformLoadSetsViewModel(
+                    etabsConnectionService,
+                    safeConnectionService);
                 viewModel.LoadFromEtabs();
 
                 // Create WPF Window as View.
