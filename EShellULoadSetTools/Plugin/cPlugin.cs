@@ -41,9 +41,6 @@ namespace EShellULoadSetTools
                 var window = new UniformLoadSetsWindowView
                 {
                     DataContext = viewModel,
-                    Title = "Shell Uniform Load Sets",
-                    Width = 360,
-                    Height = 480,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
 

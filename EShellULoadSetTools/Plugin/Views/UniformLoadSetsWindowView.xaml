@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:EShellULoadSetTools.ViewModels"
         mc:Ignorable="d"
-        Title="Shell Uniform Load Sets"
-        Height="480"
-        Width="640"
-        WindowStartupLocation="CenterScreen">
+        Title="SHELL UNIFORM LOAD SET TOOLBOX"
+        Height="720"
+        Width="600"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Resources>
         <!-- Right-aligned numeric cell style -->
         <Style x:Key="RightAlignedCellStyle" TargetType="TextBlock">
@@ -29,34 +29,30 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <TextBlock Text="Shell Uniform Load Sets"
-                   FontWeight="Bold"
-                   FontSize="14"
-                   Margin="0,0,0,8" />
 
         <!-- Current model info -->
         <Grid Grid.Row="1" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
-                       Text="Current Model"
+                       Text="MODEL:"
                        FontWeight="Bold"
-                       Margin="0,0,8,0" />
+                       FontSize="12"
+                       Margin="0,0,0,0" />
             <TextBlock Grid.Column="1"
-                       Text="{Binding CurrentModelFileName}"
-                       Margin="0,0,16,0" />
+                       Text="{Binding CurrentModelFileName}" Margin="8,0,0,0" />
             <TextBlock Grid.Column="2"
-                       Text="Current Units"
+                       Text="MODEL UNITS:"
                        FontWeight="Bold"
-                       Margin="0,0,8,0" />
+                       FontSize="12"
+                       Margin="8,0,0,0" Grid.ColumnSpan="2" />
             <TextBlock Grid.Column="3"
-                       Text="{Binding CurrentUnitsSummary}" />
+                       Text="{Binding CurrentUnitsSummary}" Margin="8,0,0,0" />
         </Grid>
 
         <!-- Main content area: TreeView on the left, DataGrid on the right -->
