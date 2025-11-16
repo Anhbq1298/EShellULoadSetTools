@@ -212,6 +212,31 @@ namespace EShellULoadSetTools.ViewModels
             }
         }
 
+        public void SelectAllLeafNodes()
+        {
+            SetPinStateForLeafNodes(true);
+        }
+
+        public void DeselectAllLeafNodes()
+        {
+            SetPinStateForLeafNodes(false);
+        }
+
+        private void SetPinStateForLeafNodes(bool isPinned)
+        {
+            foreach (var node in GetLeafNodes())
+            {
+                if (!node.HasRecords)
+                {
+                    continue;
+                }
+
+                node.IsPinned = isPinned;
+            }
+
+            RefreshSelectedRecords();
+        }
+
         private void RefreshSelectedRecords()
         {
             var pinnedNodes = GetLeafNodes()

@@ -63,24 +63,44 @@
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
-            <!-- TreeView bound to RootNodes -->
-            <TreeView Grid.Column="0"
-                      ItemsSource="{Binding RootNodes}"
-                      SelectedItemChanged="TreeView_SelectedItemChanged"
-                      Margin="0,0,8,0">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type vm:UniformLoadSetNodeViewModel}"
-                                              ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox Margin="0,0,4,0"
-                                      VerticalAlignment="Center"
-                                      Visibility="{Binding HasRecords, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                      IsChecked="{Binding IsPinned, Mode=TwoWay}" />
-                            <TextBlock Text="{Binding Name}" />
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
+            <!-- TreeView panel with action buttons -->
+            <Grid Grid.Column="0" Margin="0,0,8,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,0,8"
+                            Spacing="8">
+                    <Button Content="Select All"
+                            Padding="8,4"
+                            Click="SelectAllButton_Click" />
+                    <Button Content="Clear Selection"
+                            Padding="8,4"
+                            Click="DeselectAllButton_Click" />
+                </StackPanel>
+
+                <!-- TreeView bound to RootNodes -->
+                <TreeView Grid.Row="1"
+                          ItemsSource="{Binding RootNodes}"
+                          SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:UniformLoadSetNodeViewModel}"
+                                                  ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Margin="0,0,4,0"
+                                          VerticalAlignment="Center"
+                                          Visibility="{Binding HasRecords, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                          IsChecked="{Binding IsPinned, Mode=TwoWay}" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Grid>
 
             <!-- DataGrid showing patterns and values for the selected set -->
             <DataGrid Grid.Column="1"
