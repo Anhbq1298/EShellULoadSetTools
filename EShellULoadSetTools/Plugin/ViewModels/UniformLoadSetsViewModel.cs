@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using EShellULoadSetTools.Helpers.SAFEHelpers;
 using EShellULoadSetTools.Models;
 using EShellULoadSetTools.Services;
 
@@ -20,12 +21,17 @@ namespace EShellULoadSetTools.ViewModels
     public class UniformLoadSetsViewModel : BaseViewModel
     {
         private readonly IEtabsConnectionService _etabsConnectionService;
+        private readonly ICSISafeConnectionService? _safeConnectionService;
         private UniformLoadSetNodeViewModel? _selectedNode;
         private string _currentModelFileName = "(Unknown Model)";
         private string _currentAreaLoadUnit = "Force/Length\u00B2";
         private string _currentLengthUnit = "Length";
         private string _currentForceUnit = "Force";
         private string _currentTemperatureUnit = "Temperature";
+        private string _currentSafeModelFileName = "(Unknown SAFE Model)";
+        private string _currentSafeLengthUnit = "Length";
+        private string _currentSafeForceUnit = "Force";
+        private string _currentSafeTemperatureUnit = "Temperature";
         private readonly List<UniformLoadSetNodeViewModel> _trackedLeafNodes = new();
 
         /// <summary>
@@ -124,10 +130,63 @@ namespace EShellULoadSetTools.ViewModels
         public string CurrentUnitsSummary =>
             $"{CurrentLengthUnit}-{CurrentForceUnit}-{CurrentTemperatureUnit}";
 
-        public UniformLoadSetsViewModel(IEtabsConnectionService etabsConnectionService)
+        public string CurrentSafeModelFileName
+        {
+            get => _currentSafeModelFileName;
+            private set
+            {
+                if (_currentSafeModelFileName == value) return;
+                _currentSafeModelFileName = value ?? string.Empty;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CurrentSafeLengthUnit
+        {
+            get => _currentSafeLengthUnit;
+            private set
+            {
+                if (_currentSafeLengthUnit == value) return;
+                _currentSafeLengthUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentSafeUnitsSummary));
+            }
+        }
+
+        public string CurrentSafeForceUnit
+        {
+            get => _currentSafeForceUnit;
+            private set
+            {
+                if (_currentSafeForceUnit == value) return;
+                _currentSafeForceUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentSafeUnitsSummary));
+            }
+        }
+
+        public string CurrentSafeTemperatureUnit
+        {
+            get => _currentSafeTemperatureUnit;
+            private set
+            {
+                if (_currentSafeTemperatureUnit == value) return;
+                _currentSafeTemperatureUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentSafeUnitsSummary));
+            }
+        }
+
+        public string CurrentSafeUnitsSummary =>
+            $"{CurrentSafeLengthUnit}-{CurrentSafeForceUnit}-{CurrentSafeTemperatureUnit}";
+
+        public UniformLoadSetsViewModel(
+            IEtabsConnectionService etabsConnectionService,
+            ICSISafeConnectionService? safeConnectionService = null)
         {
             _etabsConnectionService = etabsConnectionService ??
                 throw new ArgumentNullException(nameof(etabsConnectionService));
+            _safeConnectionService = safeConnectionService;
             RootNodes = new ObservableCollection<UniformLoadSetNodeViewModel>();
             SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
         }
@@ -151,6 +210,8 @@ namespace EShellULoadSetTools.ViewModels
             CurrentLengthUnit = presentUnits.lengthUnit;
             CurrentForceUnit = presentUnits.forceUnit;
             CurrentTemperatureUnit = presentUnits.temperatureUnit;
+
+            LoadSafeModelInfo();
 
             // 2) Group by shellUniformLoadSetName for the tree.
             var groups = records
@@ -176,6 +237,28 @@ namespace EShellULoadSetTools.ViewModels
             // Optionally select the first child by default
             SelectedNode = root.Children.FirstOrDefault();
             RefreshSelectedRecords();
+        }
+
+        private void LoadSafeModelInfo()
+        {
+            if (_safeConnectionService?.IsInitialized != true)
+            {
+                return;
+            }
+
+            try
+            {
+                var safeModel = _safeConnectionService.GetSafeModel();
+                CurrentSafeModelFileName = SafeModelInfoHelper.GetModelFileName(safeModel);
+                var presentUnits = SafeModelInfoHelper.GetPresentUnitStrings(safeModel);
+                CurrentSafeLengthUnit = presentUnits.lengthUnit;
+                CurrentSafeForceUnit = presentUnits.forceUnit;
+                CurrentSafeTemperatureUnit = presentUnits.temperatureUnit;
+            }
+            catch
+            {
+                // Ignore SAFE errors and keep the default placeholder text.
+            }
         }
 
         private void RegisterLeafNodeHandler(UniformLoadSetNodeViewModel node)
