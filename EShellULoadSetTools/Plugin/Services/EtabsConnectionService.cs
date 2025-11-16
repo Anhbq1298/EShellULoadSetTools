@@ -38,5 +38,10 @@ namespace EShellULoadSetTools.Services
         {
             return UniformLoadSetEtabsHelper.GetModelFileName(SapModel);
         }
+
+        public (string lengthUnit, string forceUnit, string temperatureUnit) GetPresentUnitStrings()
+        {
+            return UniformLoadSetEtabsHelper.GetPresentUnitStrings(SapModel);
+        }
     }
 }

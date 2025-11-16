@@ -35,5 +35,10 @@ namespace EShellULoadSetTools.Services
         /// Returns the active ETABS model file name for display purposes.
         /// </summary>
         string GetModelFileName();
+
+        /// <summary>
+        /// Returns the current ETABS present unit strings for length, force and temperature.
+        /// </summary>
+        (string lengthUnit, string forceUnit, string temperatureUnit) GetPresentUnitStrings();
     }
 }

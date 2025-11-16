@@ -36,10 +36,28 @@
                    Margin="0,0,0,8" />
 
         <!-- Current model info -->
-        <TextBlock Grid.Row="1"
-                   Text="{Binding CurrentModelInfoText}"
-                   Margin="0,0,0,8"
-                   TextWrapping="Wrap" />
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Current Model"
+                       FontWeight="Bold"
+                       Margin="0,0,8,0" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding CurrentModelFileName}"
+                       Margin="0,0,16,0" />
+            <TextBlock Grid.Column="2"
+                       Text="Current Units"
+                       FontWeight="Bold"
+                       Margin="0,0,8,0" />
+            <TextBlock Grid.Column="3"
+                       Text="{Binding CurrentUnitsSummary}" />
+        </Grid>
 
         <!-- Main content area: TreeView on the left, DataGrid on the right -->
         <Grid Grid.Row="2">
