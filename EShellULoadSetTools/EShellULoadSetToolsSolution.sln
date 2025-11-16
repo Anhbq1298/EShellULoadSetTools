@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EShellULoadSetTools", "Plugin\EShellULoadSetTools.csproj", "{40208084-A5B2-4A98-A4E1-6F3DD9795110}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40208084-A5B2-4A98-A4E1-6F3DD9795110}.Debug|x64.ActiveCfg = Debug|x64
+		{40208084-A5B2-4A98-A4E1-6F3DD9795110}.Debug|x64.Build.0 = Debug|x64
+		{40208084-A5B2-4A98-A4E1-6F3DD9795110}.Release|x64.ActiveCfg = Release|x64
+		{40208084-A5B2-4A98-A4E1-6F3DD9795110}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1AB11F99-7666-4D16-9C5A-614D4869B34B}
+	EndGlobalSection
+EndGlobal
