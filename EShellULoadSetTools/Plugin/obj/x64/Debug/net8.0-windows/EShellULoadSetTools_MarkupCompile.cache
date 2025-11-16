@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\
 EShellULoadSetTools
 none
 false
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR
 
 1304784498
 
-71002499321
-1991795655297
+9-198928322
+1991562878276
 Views\UniformLoadSetsWindow.xaml;
 
-True
+False
 

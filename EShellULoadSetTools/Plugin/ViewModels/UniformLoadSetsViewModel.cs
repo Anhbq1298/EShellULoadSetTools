@@ -223,7 +223,7 @@ namespace EShellULoadSetTools.ViewModels
                 eLength length = 0;
                 eTemperature temperature = 0;
 
-                int ret = sapModel.GetPresentUnits(ref force, ref length, ref temperature);
+                int ret = sapModel.GetPresentUnits_2(ref force, ref length, ref temperature);
                 if (ret == 0)
                 {
                     string forceUnit = force.ToString();
