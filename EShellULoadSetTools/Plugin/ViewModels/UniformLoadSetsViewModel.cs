@@ -22,6 +22,9 @@ namespace EShellULoadSetTools.ViewModels
         private UniformLoadSetNodeViewModel? _selectedNode;
         private string _currentModelFileName = "(Unknown Model)";
         private string _currentAreaLoadUnit = "Force/Length\u00B2";
+        private string _currentLengthUnit = "Length";
+        private string _currentForceUnit = "Force";
+        private string _currentTemperatureUnit = "Temperature";
 
         /// <summary>
         /// Root nodes of the TreeView.
@@ -56,7 +59,6 @@ namespace EShellULoadSetTools.ViewModels
                 if (_currentModelFileName == value) return;
                 _currentModelFileName = value ?? string.Empty;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentModelInfoText));
             }
         }
 
@@ -71,15 +73,47 @@ namespace EShellULoadSetTools.ViewModels
                 if (_currentAreaLoadUnit == value) return;
                 _currentAreaLoadUnit = value ?? string.Empty;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentModelInfoText));
             }
         }
 
-        /// <summary>
-        /// Combined information text shown in the window header.
-        /// </summary>
-        public string CurrentModelInfoText =>
-            $"Current Model: {CurrentModelFileName}, Current Unit: {CurrentAreaLoadUnit}";
+        public string CurrentLengthUnit
+        {
+            get => _currentLengthUnit;
+            private set
+            {
+                if (_currentLengthUnit == value) return;
+                _currentLengthUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentUnitsSummary));
+            }
+        }
+
+        public string CurrentForceUnit
+        {
+            get => _currentForceUnit;
+            private set
+            {
+                if (_currentForceUnit == value) return;
+                _currentForceUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentUnitsSummary));
+            }
+        }
+
+        public string CurrentTemperatureUnit
+        {
+            get => _currentTemperatureUnit;
+            private set
+            {
+                if (_currentTemperatureUnit == value) return;
+                _currentTemperatureUnit = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentUnitsSummary));
+            }
+        }
+
+        public string CurrentUnitsSummary =>
+            $"{CurrentLengthUnit}-{CurrentForceUnit}-{CurrentTemperatureUnit}";
 
         public UniformLoadSetsViewModel(IEtabsConnectionService etabsConnectionService)
         {
@@ -103,6 +137,10 @@ namespace EShellULoadSetTools.ViewModels
 
             CurrentModelFileName = _etabsConnectionService.GetModelFileName();
             CurrentAreaLoadUnit = _etabsConnectionService.GetAreaLoadUnitString();
+            var presentUnits = _etabsConnectionService.GetPresentUnitStrings();
+            CurrentLengthUnit = presentUnits.lengthUnit;
+            CurrentForceUnit = presentUnits.forceUnit;
+            CurrentTemperatureUnit = presentUnits.temperatureUnit;
 
             // 2) Group by shellUniformLoadSetName for the tree.
             var groups = records
