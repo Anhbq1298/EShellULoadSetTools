@@ -30,7 +30,13 @@
   <ItemGroup>
     <Reference Include="ETABSv1">
       <HintPath>ETABSv1.dll</HintPath>
-      <Private>false</Private>
+      <Private>True</Private>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SAFEv1">
+      <HintPath>SAFEv1.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
