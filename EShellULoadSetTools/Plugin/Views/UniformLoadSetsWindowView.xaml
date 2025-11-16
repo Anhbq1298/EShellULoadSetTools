@@ -26,6 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -56,8 +57,32 @@
                        Text="{Binding CurrentUnitsSummary}" Margin="8,0,0,0" />
         </Grid>
 
+        <!-- SAFE model info -->
+        <Grid Grid.Row="2" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="SAFE MODEL:"
+                       FontWeight="Bold"
+                       FontSize="12" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding CurrentSafeModelFileName}" Margin="8,0,0,0" />
+            <TextBlock Grid.Column="2"
+                       Text="SAFE MODEL UNITS:"
+                       FontWeight="Bold"
+                       FontSize="12"
+                       Margin="8,0,0,0" Grid.ColumnSpan="2" />
+            <TextBlock Grid.Column="3"
+                       Text="{Binding CurrentSafeUnitsSummary}" Margin="8,0,0,0" />
+        </Grid>
+
         <!-- Main content area: TreeView on the left, DataGrid on the right -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="3*" />
@@ -132,7 +157,7 @@
         </Grid>
 
         <!-- Bottom close button -->
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
                 Content="Close"
                 HorizontalAlignment="Right"
                 Width="80"
