@@ -30,5 +30,10 @@ namespace EShellULoadSetTools.Services
         /// Returns the formatted unit string for shell uniform load values using the current ETABS units.
         /// </summary>
         string GetAreaLoadUnitString();
+
+        /// <summary>
+        /// Returns the active ETABS model file name for display purposes.
+        /// </summary>
+        string GetModelFileName();
     }
 }

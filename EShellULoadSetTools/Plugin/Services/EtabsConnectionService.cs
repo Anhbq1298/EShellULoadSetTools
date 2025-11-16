@@ -33,5 +33,10 @@ namespace EShellULoadSetTools.Services
         {
             return UniformLoadSetEtabsHelper.GetAreaLoadUnitString(SapModel);
         }
+
+        public string GetModelFileName()
+        {
+            return UniformLoadSetEtabsHelper.GetModelFileName(SapModel);
+        }
     }
 }
