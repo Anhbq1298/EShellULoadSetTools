@@ -239,28 +239,18 @@ namespace EShellULoadSetTools.ViewModels
 
         private void RefreshSelectedRecords()
         {
-            var pinnedNodes = GetLeafNodes()
+            var nodesToDisplay = GetLeafNodes()
                 .Where(n => n.IsPinned && n.HasRecords)
                 .OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            IEnumerable<UniformLoadSetNodeViewModel> nodesToDisplay;
+            SelectedRecords.Clear();
 
-            if (pinnedNodes.Count > 0)
+            if (nodesToDisplay.Count == 0)
             {
-                nodesToDisplay = pinnedNodes;
-            }
-            else if (SelectedNode != null && SelectedNode.HasRecords)
-            {
-                nodesToDisplay = new[] { SelectedNode };
-            }
-            else
-            {
-                SelectedRecords.Clear();
                 return;
             }
 
-            SelectedRecords.Clear();
             foreach (var node in nodesToDisplay)
             {
                 foreach (var record in node.Records)
