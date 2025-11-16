@@ -4,12 +4,12 @@ C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8
 C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.cache
 C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.lref
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.dll
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.csproj.AssemblyReference.cache
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.cache
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.deps.json
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.pdb
-C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.csproj.AssemblyReference.cache
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\Views\UniformLoadSetsWindowView.g.cs
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
-C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.cache
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.lref
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\Views\UniformLoadSetsWindowView.baml
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.g.resources

@@ -73,14 +73,15 @@
                 <StackPanel Grid.Row="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left"
-                            Margin="0,0,0,8"
-                            Spacing="8">
+                            Margin="0,0,0,8">
                     <Button Content="Select All"
                             Padding="8,4"
-                            Click="SelectAllButton_Click" />
+                            Margin="0,4,0,4"
+                            Click="SelectAllButton_Click" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <Button Content="Clear Selection"
                             Padding="8,4"
-                            Click="DeselectAllButton_Click" />
+                            Margin="8,4,8,4"
+                            Click="DeselectAllButton_Click" HorizontalAlignment="Right" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <!-- TreeView bound to RootNodes -->
