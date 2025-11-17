@@ -40,5 +40,10 @@ namespace EShellULoadSetTools.Services
         /// Returns the current ETABS present unit strings for length, force and temperature.
         /// </summary>
         (string lengthUnit, string forceUnit, string temperatureUnit) GetPresentUnitStrings();
+
+        /// <summary>
+        /// Retrieves the currently selected floor (area) object names from the active ETABS model.
+        /// </summary>
+        IReadOnlyList<string> GetSelectedFloorNames();
     }
 }

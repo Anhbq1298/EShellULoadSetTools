@@ -83,5 +83,22 @@ namespace EShellULoadSetTools.Views
                 }
             }
         }
+
+        private void TransferULoadSetAssignmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not UniformLoadSetsViewModel viewModel)
+            {
+                return;
+            }
+
+            var assignmentViewModel = viewModel.CreateTransferAssignmentViewModel();
+            var window = new TransferULoadSetAssignmentWindow
+            {
+                DataContext = assignmentViewModel,
+                Owner = this
+            };
+
+            window.ShowDialog();
+        }
     }
 }

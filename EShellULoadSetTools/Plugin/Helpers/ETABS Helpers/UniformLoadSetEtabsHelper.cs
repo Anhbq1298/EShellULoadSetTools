@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using ETABSv1;
 using EShellULoadSetTools.Models;
 
@@ -237,6 +238,42 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
             }
 
             return (lengthUnit, forceUnit, temperatureUnit);
+        }
+
+        /// <summary>
+        /// Returns the names of area objects currently selected in ETABS.
+        /// </summary>
+        internal static IReadOnlyList<string> GetSelectedAreaNames(cSapModel sapModel)
+        {
+            if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
+
+            try
+            {
+                int numberItems = 0;
+                int[] objectTypes = Array.Empty<int>();
+                string[] objectNames = Array.Empty<string>();
+
+                int ret = sapModel.SelectObj.GetSelected(ref numberItems, ref objectTypes, ref objectNames);
+                if (ret != 0 || numberItems <= 0)
+                {
+                    return Array.Empty<string>();
+                }
+
+                // 3 is the ETABS object type for area objects.
+                const int areaObjectType = 3;
+
+                return objectTypes
+                    .Select((type, index) => (type, index))
+                    .Where(t => t.type == areaObjectType && t.index < objectNames.Length)
+                    .Select(t => objectNames[t.index])
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+            }
+            catch
+            {
+                return Array.Empty<string>();
+            }
         }
 
     }

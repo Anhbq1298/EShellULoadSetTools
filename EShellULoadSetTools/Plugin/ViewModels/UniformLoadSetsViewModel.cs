@@ -203,6 +203,22 @@ namespace EShellULoadSetTools.ViewModels
             SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
         }
 
+        public IReadOnlyList<string> GetLoadSetNames()
+        {
+            return GetLeafNodes()
+                .Where(n => n.HasRecords)
+                .Select(n => n.Name)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        public TransferULoadSetAssignmentViewModel CreateTransferAssignmentViewModel()
+        {
+            return new TransferULoadSetAssignmentViewModel(
+                _etabsConnectionService,
+                GetLoadSetNames());
+        }
+
         public void ApplyToSafe()
         {
             if (_safeConnectionService?.IsInitialized != true)
