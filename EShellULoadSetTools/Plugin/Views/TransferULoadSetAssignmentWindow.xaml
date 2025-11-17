@@ -20,13 +20,7 @@
                 Click="SelectFloorButton_Click" />
 
         <Grid Grid.Row="1" Margin="0,12,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
             <GroupBox Header="Selected Floors"
-                      Grid.Column="0"
                       Margin="0,0,8,0">
                 <DataGrid ItemsSource="{Binding SelectedFloors}"
                           AutoGenerateColumns="False"
@@ -35,6 +29,9 @@
                           CanUserDeleteRows="False"
                           IsReadOnly="True">
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="ETABS GUID"
+                                            Binding="{Binding EtabsGuid}"
+                                            Width="*" />
                         <DataGridTextColumn Header="ETABS UniqueName"
                                             Binding="{Binding EtabsUniqueName}"
                                             Width="*" />
@@ -49,12 +46,6 @@
                                             Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
-            </GroupBox>
-
-            <GroupBox Header="Uniform Load Sets"
-                      Grid.Column="1"
-                      Margin="8,0,0,0">
-                <ListView ItemsSource="{Binding AvailableLoadSets}" />
             </GroupBox>
         </Grid>
 
