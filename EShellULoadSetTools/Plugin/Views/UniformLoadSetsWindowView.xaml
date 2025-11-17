@@ -38,6 +38,23 @@
             <!-- 4: Close button -->
         </Grid.RowDefinitions>
 
+        <!-- SAFE actions -->
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,8">
+            <Button Content="Attach To SAFE"
+                    Padding="8,4"
+                    Click="AttachToSafeButton_Click" />
+            <Button Content="Transfer Loadset Definition"
+                    Padding="8,4"
+                    Margin="8,0,0,0"
+                    Click="TransferLoadsetDefinitionButton_Click" />
+            <Button Content="Apply To SAFE"
+                    Padding="8,4"
+                    Margin="8,0,0,0"
+                    Click="ApplyToSafeButton_Click" />
+        </StackPanel>
 
         <Grid Grid.Row="0" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
