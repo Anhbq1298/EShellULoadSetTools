@@ -191,6 +191,25 @@ namespace EShellULoadSetTools.ViewModels
             SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
         }
 
+        public void AttachToSafe()
+        {
+            if (_safeConnectionService == null)
+            {
+                SetSafePlaceholders("(SAFE connection unavailable)");
+                return;
+            }
+
+            try
+            {
+                _safeConnectionService.Initialize();
+                LoadSafeModelInfo();
+            }
+            catch
+            {
+                SetSafePlaceholders("(Unable to attach to SAFE)");
+            }
+        }
+
         /// <summary>
         /// Load the Shell Uniform Load Sets from the ETABS model provided by
         /// the connection service and populate the tree structure.
@@ -237,6 +256,14 @@ namespace EShellULoadSetTools.ViewModels
             // Optionally select the first child by default
             SelectedNode = root.Children.FirstOrDefault();
             RefreshSelectedRecords();
+        }
+
+        private void SetSafePlaceholders(string message)
+        {
+            CurrentSafeModelFileName = message;
+            CurrentSafeLengthUnit = "Length";
+            CurrentSafeForceUnit = "Force";
+            CurrentSafeTemperatureUnit = "Temperature";
         }
 
         private void LoadSafeModelInfo()
