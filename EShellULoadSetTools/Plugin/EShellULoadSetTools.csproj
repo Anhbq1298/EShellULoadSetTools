@@ -1,71 +1,75 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>EShellULoadSetTools</AssemblyName>
-    <RootNamespace>EShellULoadSetTools</RootNamespace>
-    <OutputType>Library</OutputType>
-    <Platforms>x64</Platforms>
-    <GenerateMSBuildEditorConfigFile>false</GenerateMSBuildEditorConfigFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyName>EShellULoadSetTools</AssemblyName>
+		<RootNamespace>EShellULoadSetTools</RootNamespace>
+		<OutputType>Library</OutputType>
+		<Platforms>x64</Platforms>
+		<GenerateMSBuildEditorConfigFile>false</GenerateMSBuildEditorConfigFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<DebugType>portable</DebugType>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
 
-  <!--
-    IMPORTANT:
-    Update the HintPath below to point to your local ETABSv1.dll.
-    Example:
-      C:\Program Files\Computers and Structures\ETABS 21\ETABSv1.dll
-  -->
-  <ItemGroup>
-    <Reference Include="ETABSv1">
-      <HintPath>ETABSv1.dll</HintPath>
-    </Reference>
-    <Reference Include="SAFEv1">
-      <HintPath>SAFEv1.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+	<!-- COM interop assemblies -->
+	<ItemGroup>
+		<Reference Include="ETABSv1">
+			<EmbedInteropTypes>false</EmbedInteropTypes>
+			<!-- Do not copy ETABSv1.dll next to the plugin -->
+			<Private>false</Private>
+		</Reference>
 
-  <!-- Prevent COM interop assemblies from being shadow-copied into the plugin output. -->
-  <Target Name="RemoveLocalEtabsInterop" AfterBuild>
-    <ItemGroup>
-      <InteropDlls Include="$(OutDir)ETABSv1.dll;$(OutDir)CSIAPIv1.dll;$(OutDir)SAFEv1.dll" />
-    </ItemGroup>
-    <Delete Files="@(InteropDlls)" Condition="Exists('%(InteropDlls.Identity)')" ContinueOnError="true" />
-  </Target>
+		<Reference Include="SAFEv1">
+			<EmbedInteropTypes>false</EmbedInteropTypes>
+			<!-- Keep SAFEv1.dll next to the plugin so ETABS can load it -->
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>true</DesignTime>
+			<AutoGen>true</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>true</DesignTimeSharedInput>
+			<AutoGen>true</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
+	<!-- Clean up ETABS interop assemblies from the output directory, keep SAFEv1.dll -->
+	<Target Name="CleanupEtabsInterop" AfterTargets="Build">
+		<Delete Files="$(OutDir)ETABSv1.dll"
+				ContinueOnError="true" />
+		<Delete Files="$(OutDir)CSIAPIv1.dll"
+				ContinueOnError="true" />
+	</Target>
 
 </Project>
+

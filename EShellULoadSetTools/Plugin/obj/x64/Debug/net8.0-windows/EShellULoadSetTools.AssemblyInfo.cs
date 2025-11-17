@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EShellULoadSetTools")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+88601a92e1913af51fade8e7292537a656a81ac2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48fa2db5dc1d320b0d67c42328afeac9b212ab1e")]
 [assembly: System.Reflection.AssemblyProductAttribute("EShellULoadSetTools")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EShellULoadSetTools")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
