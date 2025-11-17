@@ -55,27 +55,5 @@ namespace EShellULoadSetTools.Views
                 MessageText.Text = message;
             }
         }
-
-        public void UpdateProgress(int percent, string? message = null)
-        {
-            if (!Dispatcher.CheckAccess())
-            {
-                Dispatcher.Invoke(() => UpdateProgress(percent, message));
-                return;
-            }
-
-            int clamped = Math.Max(0, Math.Min(100, percent));
-            SpinnerContainer.Visibility = Visibility.Visible;
-            StartSpinner();
-
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                MessageText.Text = message;
-            }
-            else
-            {
-                MessageText.Text = $"Processing... {clamped}%";
-            }
-        }
     }
 }

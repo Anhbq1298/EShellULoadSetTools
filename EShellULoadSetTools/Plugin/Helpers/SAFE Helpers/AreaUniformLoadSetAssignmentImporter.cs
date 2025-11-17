@@ -15,8 +15,7 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
         public static void Import(
             cSapModel sapModel,
-            IEnumerable<AreaUniformLoadSetAssignmentRow> rows,
-            IProgress<int>? progress = null)
+            IEnumerable<AreaUniformLoadSetAssignmentRow> rows)
         {
             if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
             if (rows == null) throw new ArgumentNullException(nameof(rows));
@@ -79,8 +78,6 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
                     tableData[offset + areaNameIndex] = row.SafeUniqueName;
                     tableData[offset + loadSetIndex] = row.UniformLoadSetName;
-
-                    ReportProgress(progress, r + 1, rowList.Count);
                 }
 
                 string[] fieldsKeysIncluded = fieldKeys;
@@ -136,19 +133,6 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
                 throw new InvalidOperationException($"SAFE returned error code {applyResult} when applying '{TableKey}'.{details}");
             }
-
-            ReportProgress(progress, rowList.Count, rowList.Count);
-        }
-
-        private static void ReportProgress(IProgress<int>? progress, int completed, int total)
-        {
-            if (progress == null || total <= 0)
-            {
-                return;
-            }
-
-            int percent = (int)Math.Round((double)completed * 100 / total);
-            progress.Report(percent);
         }
     }
 }

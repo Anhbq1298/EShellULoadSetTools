@@ -220,7 +220,7 @@ namespace EShellULoadSetTools.ViewModels
                 _safeConnectionService);
         }
 
-        public void ApplyToSafe(IProgress<int>? progress = null)
+        public void ApplyToSafe()
         {
             if (_safeConnectionService?.IsInitialized != true)
             {
@@ -228,8 +228,7 @@ namespace EShellULoadSetTools.ViewModels
             }
 
             var safeModel = _safeConnectionService.GetSafeModel();
-            progress?.Report(0);
-            ShellUniformLoadSetImporter.Import(safeModel, SelectedRowsForImport, progress);
+            ShellUniformLoadSetImporter.Import(safeModel, SelectedRowsForImport);
 
             // Refresh SAFE info in case the connection changed units or model metadata.
             LoadSafeModelInfo();
