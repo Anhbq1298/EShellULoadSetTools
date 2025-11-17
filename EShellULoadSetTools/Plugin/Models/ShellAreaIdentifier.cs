@@ -11,6 +11,8 @@ namespace EShellULoadSetTools.Models
     /// </summary>
     public class ShellAreaIdentifier
     {
+        public string Guid { get; set; } = string.Empty;
+
         public string UniqueName { get; set; } = string.Empty;
 
         public string Label { get; set; } = string.Empty;

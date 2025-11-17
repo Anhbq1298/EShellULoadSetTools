@@ -51,6 +51,7 @@ namespace EShellULoadSetTools.ViewModels
             {
                 SelectedFloors.Add(new SlabAssignmentRow
                 {
+                    EtabsGuid = floor.Guid,
                     EtabsUniqueName = floor.UniqueName,
                     EtabsLabel = floor.Label
                 });

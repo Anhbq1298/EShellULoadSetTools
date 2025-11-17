@@ -10,6 +10,8 @@ namespace EShellULoadSetTools.Models
     /// </summary>
     public class SlabAssignmentRow
     {
+        public string EtabsGuid { get; set; } = string.Empty;
+
         public string EtabsUniqueName { get; set; } = string.Empty;
 
         public string EtabsLabel { get; set; } = string.Empty;

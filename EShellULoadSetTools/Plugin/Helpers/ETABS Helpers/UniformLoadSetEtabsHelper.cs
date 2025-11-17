@@ -283,22 +283,28 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                     }
 
                     string uniqueName = objectName;
+                    string guid = string.Empty;
 
                     try
                     {
-                        string guid = string.Empty;
-                        int guidRet = sapModel.AreaObj.GetGUID(objectName, ref guid);
-                        if (guidRet == 0 && !string.IsNullOrWhiteSpace(guid))
-                        {
-                            uniqueName = guid;
-                        }
+                        sapModel.AreaObj.GetGUID(objectName, ref guid);
                     }
                     catch
                     {
-                        // Fall back to the object name below if GUID retrieval fails.
+                        // Ignore GUID retrieval failures, leave it empty.
                     }
 
-                    string label = objectName;
+                    string label = string.Empty;
+                    try
+                    {
+                        string story = string.Empty;
+                        sapModel.AreaObj.GetLabelFromName(objectName, ref label, ref story);
+                    }
+                    catch
+                    {
+                        // Ignore label retrieval failures, fallback below.
+                    }
+
                     if (string.IsNullOrWhiteSpace(label))
                     {
                         label = uniqueName;
@@ -308,6 +314,7 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                     {
                         identifiers.Add(new ShellAreaIdentifier
                         {
+                            Guid = guid,
                             UniqueName = uniqueName,
                             Label = label
                         });
