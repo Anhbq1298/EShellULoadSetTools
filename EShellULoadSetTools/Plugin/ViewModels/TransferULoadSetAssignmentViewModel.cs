@@ -47,13 +47,17 @@ namespace EShellULoadSetTools.ViewModels
             SelectedFloors.Clear();
 
             IReadOnlyList<ShellAreaIdentifier> selectedFloors = _etabsConnectionService.GetSelectedShellAreaIdentifiers();
+            var loadSetAssignments = _etabsConnectionService.GetShellAreaUniformLoadSetAssignments();
             foreach (var floor in selectedFloors)
             {
+                loadSetAssignments.TryGetValue(floor.UniqueName, out string? assignedLoadSet);
+
                 SelectedFloors.Add(new SlabAssignmentRow
                 {
                     EtabsGuid = floor.Guid,
                     EtabsUniqueName = floor.UniqueName,
-                    EtabsLabel = floor.Label
+                    EtabsLabel = floor.Label,
+                    AssignedLoadSet = assignedLoadSet ?? string.Empty
                 });
             }
         }
