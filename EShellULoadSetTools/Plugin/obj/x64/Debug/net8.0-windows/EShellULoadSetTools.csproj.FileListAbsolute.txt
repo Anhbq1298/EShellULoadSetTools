@@ -1,11 +1,8 @@
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.csproj.AssemblyReference.cache
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\Views\UniformLoadSetsWindow.g.cs
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.cache
-C:\Users\NCPC\Desktop\_TempPlugins\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools_MarkupCompile.lref
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.deps.json
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.dll
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\EShellULoadSetTools.pdb
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\ETABSv1.dll
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\bin\x64\Debug\net8.0-windows\SAFEv1.dll
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.csproj.AssemblyReference.cache
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\Views\UniformLoadSetsWindowView.g.cs
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
@@ -19,6 +16,7 @@ C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plu
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.AssemblyInfo.cs
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.csproj.CoreCompileInputs.cache
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.sourcelink.json
+C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellUL.7C92346F.Up2Date
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.dll
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\refint\EShellULoadSetTools.dll
 C:\Users\NCPC\source\repos\Anhbq1298\EShellULoadSetTools\EShellULoadSetTools\Plugin\obj\x64\Debug\net8.0-windows\EShellULoadSetTools.pdb
