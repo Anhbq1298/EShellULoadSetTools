@@ -13,6 +13,8 @@ namespace EShellULoadSetTools.Views
 {
     public partial class UniformLoadSetsWindowView : Window
     {
+        private WindowState _previousWindowState = WindowState.Normal;
+
         public UniformLoadSetsWindowView()
         {
             InitializeComponent();
@@ -98,7 +100,26 @@ namespace EShellULoadSetTools.Views
                 Owner = this
             };
 
+            window.Closed += TransferAssignmentWindowOnClosed;
             window.Show();
+
+            _previousWindowState = WindowState;
+            WindowState = WindowState.Minimized;
+        }
+
+        private void TransferAssignmentWindowOnClosed(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                WindowState = _previousWindowState;
+            }
+
+            Activate();
+
+            if (sender is Window window)
+            {
+                window.Closed -= TransferAssignmentWindowOnClosed;
+            }
         }
     }
 }

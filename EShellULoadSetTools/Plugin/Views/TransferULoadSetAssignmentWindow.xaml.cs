@@ -5,8 +5,6 @@ namespace EShellULoadSetTools.Views
 {
     public partial class TransferULoadSetAssignmentWindow : Window
     {
-        private WindowState _previousWindowState = WindowState.Normal;
-
         public TransferULoadSetAssignmentWindow()
         {
             InitializeComponent();
@@ -14,23 +12,13 @@ namespace EShellULoadSetTools.Views
 
         private void SelectFloorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not TransferULoadSetAssignmentViewModel)
-            {
-                return;
-            }
-
-            HidePluginForEtabsSelection();
-        }
-
-        private void DoneSelectionButton_Click(object sender, RoutedEventArgs e)
-        {
             if (DataContext is not TransferULoadSetAssignmentViewModel viewModel)
             {
                 return;
             }
 
-            RestorePluginAfterSelection();
             viewModel.RefreshSelectionFromEtabs();
+            RestorePluginAfterSelection();
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
@@ -38,18 +26,11 @@ namespace EShellULoadSetTools.Views
             Close();
         }
 
-        private void HidePluginForEtabsSelection()
-        {
-            _previousWindowState = WindowState;
-            Topmost = false;
-            WindowState = WindowState.Minimized;
-        }
-
         private void RestorePluginAfterSelection()
         {
             if (WindowState == WindowState.Minimized)
             {
-                WindowState = _previousWindowState;
+                WindowState = WindowState.Normal;
             }
 
             Activate();
