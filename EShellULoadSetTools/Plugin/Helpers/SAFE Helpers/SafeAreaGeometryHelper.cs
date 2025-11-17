@@ -110,7 +110,10 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
         private static string FormatCoordinate(double x, double y)
         {
-            return $"[{x.ToString("G15", CultureInfo.InvariantCulture)},{y.ToString("G15", CultureInfo.InvariantCulture)}]";
+            double roundedX = Math.Round(x, 1, MidpointRounding.AwayFromZero);
+            double roundedY = Math.Round(y, 1, MidpointRounding.AwayFromZero);
+
+            return $"[{roundedX.ToString("F1", CultureInfo.InvariantCulture)},{roundedY.ToString("F1", CultureInfo.InvariantCulture)}]";
         }
     }
 }
