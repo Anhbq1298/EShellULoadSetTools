@@ -1,0 +1,51 @@
+<Window x:Class="EShellULoadSetTools.Views.TransferULoadSetAssignmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Transfer ULoadSet Assignment"
+        Height="450"
+        Width="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button Content="Select Floor From ETABS"
+                Padding="12,6"
+                Width="200"
+                HorizontalAlignment="Left"
+                Click="SelectFloorButton_Click" />
+
+        <Grid Grid.Row="1" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Selected Floors"
+                      Grid.Column="0"
+                      Margin="0,0,8,0">
+                <ListView ItemsSource="{Binding SelectedFloors}" />
+            </GroupBox>
+
+            <GroupBox Header="Uniform Load Sets"
+                      Grid.Column="1"
+                      Margin="8,0,0,0">
+                <ListView ItemsSource="{Binding AvailableLoadSets}" />
+            </GroupBox>
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,12,0,0">
+            <Button Content="Close"
+                    Width="80"
+                    IsCancel="True"
+                    Click="CloseButton_OnClick" />
+        </StackPanel>
+    </Grid>
+</Window>

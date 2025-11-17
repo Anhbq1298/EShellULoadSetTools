@@ -43,5 +43,10 @@ namespace EShellULoadSetTools.Services
         {
             return UniformLoadSetEtabsHelper.GetPresentUnitStrings(SapModel);
         }
+
+        public IReadOnlyList<string> GetSelectedFloorNames()
+        {
+            return UniformLoadSetEtabsHelper.GetSelectedAreaNames(SapModel);
+        }
     }
 }
