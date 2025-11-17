@@ -1,4 +1,4 @@
-<Window x:Class="EShellULoadSetTools.Views.UniformLoadSetsWindowView"
+﻿<Window x:Class="EShellULoadSetTools.Views.UniformLoadSetsWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,6 +13,7 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         <!-- Right-aligned numeric cell style -->
         <Style x:Key="RightAlignedCellStyle" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
@@ -31,27 +32,14 @@
             <RowDefinition Height="Auto" />
             <!-- 1: SAFE model info -->
             <RowDefinition Height="Auto" />
-            <!-- 2: SAFE actions (Attach) -->
+            <!-- 2: SAFE actions -->
             <RowDefinition />
             <!-- 3: Main content -->
             <RowDefinition Height="Auto" />
             <!-- 4: Close button -->
         </Grid.RowDefinitions>
 
-        <!-- SAFE actions -->
-        <StackPanel Grid.Row="0"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,0,8">
-            <Button Content="Attach To SAFE"
-                    Padding="8,4"
-                    Click="AttachToSafeButton_Click" />
-            <Button Content="Apply To SAFE"
-                    Padding="8,4"
-                    Margin="8,0,0,0"
-                    Click="ApplyToSafeButton_Click" />
-        </StackPanel>
-
+        <!-- ETABS model info -->
         <Grid Grid.Row="0" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.75*" />
@@ -63,11 +51,11 @@
             <TextBlock Grid.Column="0"
                        Text="MODEL:"
                        FontWeight="Bold"
-                       FontSize="12"
-                       Margin="0,0,0,0" />
+                       FontSize="12" />
             <TextBlock Grid.Column="1"
                        Text="{Binding CurrentModelFileName}"
                        Margin="8,0,0,0" />
+
             <TextBlock Grid.Column="2"
                        Text="MODEL UNITS:"
                        FontWeight="Bold"
@@ -95,6 +83,7 @@
             <TextBlock Grid.Column="1"
                        Text="{Binding CurrentSafeModelFileName}"
                        Margin="8,0,0,0" />
+
             <TextBlock Grid.Column="2"
                        Text="SAFE MODEL UNITS:"
                        FontWeight="Bold"
@@ -106,18 +95,27 @@
                        Margin="8,0,0,0" />
         </Grid>
 
-        <!-- SAFE actions (Attach button moved here) -->
+        <!-- SAFE actions (Attach + Apply) trên một hàng -->
         <Grid Grid.Row="2" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
                     Content="Attach To SAFE"
                     Padding="12,4"
+                    Margin="0,0,0,0"
                     HorizontalAlignment="Left"
                     Click="AttachToSafeButton_Click" />
+
+            <Button Grid.Column="1"
+                    Content="Apply To SAFE"
+                    Padding="12,4"
+                    Margin="8,0,0,0"
+                    HorizontalAlignment="Left"
+                    Click="ApplyToSafeButton_Click" />
         </Grid>
 
         <!-- Main content area: TreeView on the left, DataGrid on the right -->
