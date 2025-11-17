@@ -50,5 +50,13 @@ namespace EShellULoadSetTools.Views
                 viewModel.DeselectAllLeafNodes();
             }
         }
+
+        private void AttachToSafeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is UniformLoadSetsViewModel viewModel)
+            {
+                viewModel.AttachToSafe();
+            }
+        }
     }
 }

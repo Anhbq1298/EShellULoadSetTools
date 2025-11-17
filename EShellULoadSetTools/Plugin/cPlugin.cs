@@ -33,15 +33,14 @@ namespace EShellULoadSetTools
                 var etabsConnectionService = new EtabsConnectionService();
                 etabsConnectionService.Initialize(SapModel);
 
-                ICSISafeConnectionService? safeConnectionService = null;
+                var safeConnectionService = new CSISafeConnectionService();
                 try
                 {
-                    safeConnectionService = new CSISafeConnectionService();
                     safeConnectionService.Initialize();
                 }
                 catch
                 {
-                    safeConnectionService = null;
+                    // SAFE connection can be retried from the UI.
                 }
 
                 // Create ViewModel and load Shell Uniform Load Sets from ETABS.

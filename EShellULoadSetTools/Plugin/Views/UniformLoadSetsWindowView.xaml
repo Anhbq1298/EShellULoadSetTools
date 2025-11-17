@@ -31,6 +31,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- SAFE actions -->
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,8">
+            <Button Content="Attach To SAFE"
+                    Padding="8,4"
+                    Click="AttachToSafeButton_Click" />
+        </StackPanel>
+
 
         <!-- Current model info -->
         <Grid Grid.Row="1" Margin="0,0,0,8">
