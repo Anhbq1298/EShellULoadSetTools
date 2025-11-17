@@ -50,5 +50,11 @@ namespace EShellULoadSetTools.Services
         /// Retrieves the currently selected floor (area) objects and their labels from the active ETABS model.
         /// </summary>
         IReadOnlyList<ShellAreaIdentifier> GetSelectedShellAreaIdentifiers();
+
+        /// <summary>
+        /// Retrieves the shell uniform load set assignments for area objects in the ETABS model,
+        /// keyed by area unique name.
+        /// </summary>
+        IReadOnlyDictionary<string, string> GetShellAreaUniformLoadSetAssignments();
     }
 }

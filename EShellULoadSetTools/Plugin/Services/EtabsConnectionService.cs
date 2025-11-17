@@ -26,7 +26,7 @@ namespace EShellULoadSetTools.Services
 
         public IReadOnlyList<ShellUniformLoadSetRecord> GetShellUniformLoadSetRecords()
         {
-            return UniformLoadSetEtabsHelper.GetShellUniformLoadSetRecords(SapModel);
+            return EtabsDatabaseHelper.GetShellUniformLoadSetRecords(SapModel);
         }
 
         public string GetAreaLoadUnitString()
@@ -52,6 +52,11 @@ namespace EShellULoadSetTools.Services
         public IReadOnlyList<ShellAreaIdentifier> GetSelectedShellAreaIdentifiers()
         {
             return UniformLoadSetEtabsHelper.GetSelectedAreaIdentifiers(SapModel);
+        }
+
+        public IReadOnlyDictionary<string, string> GetShellAreaUniformLoadSetAssignments()
+        {
+            return EtabsDatabaseHelper.GetAreaUniformLoadSetAssignments(SapModel);
         }
     }
 }
