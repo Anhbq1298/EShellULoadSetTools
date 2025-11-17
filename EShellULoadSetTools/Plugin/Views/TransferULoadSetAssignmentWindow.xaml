@@ -28,7 +28,27 @@
             <GroupBox Header="Selected Floors"
                       Grid.Column="0"
                       Margin="0,0,8,0">
-                <ListView ItemsSource="{Binding SelectedFloors}" />
+                <DataGrid ItemsSource="{Binding SelectedFloors}"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ETABS UniqueName"
+                                            Binding="{Binding EtabsUniqueName}"
+                                            Width="*" />
+                        <DataGridTextColumn Header="ETABS Label"
+                                            Binding="{Binding EtabsLabel}"
+                                            Width="*" />
+                        <DataGridTextColumn Header="Assigned Load Set"
+                                            Binding="{Binding AssignedLoadSet}"
+                                            Width="*" />
+                        <DataGridTextColumn Header="SAFE UniqueName"
+                                            Binding="{Binding SafeUniqueName}"
+                                            Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
 
             <GroupBox Header="Uniform Load Sets"

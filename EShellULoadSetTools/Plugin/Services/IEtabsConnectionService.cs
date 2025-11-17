@@ -45,5 +45,10 @@ namespace EShellULoadSetTools.Services
         /// Retrieves the currently selected floor (area) object names from the active ETABS model.
         /// </summary>
         IReadOnlyList<string> GetSelectedShellUniqueNames();
+
+        /// <summary>
+        /// Retrieves the currently selected floor (area) objects and their labels from the active ETABS model.
+        /// </summary>
+        IReadOnlyList<ShellAreaIdentifier> GetSelectedShellAreaIdentifiers();
     }
 }

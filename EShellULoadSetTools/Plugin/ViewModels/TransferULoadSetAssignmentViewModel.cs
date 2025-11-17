@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EShellULoadSetTools.Services;
+using EShellULoadSetTools.Models;
 
 namespace EShellULoadSetTools.ViewModels
 {
@@ -17,7 +18,7 @@ namespace EShellULoadSetTools.ViewModels
         /// <summary>
         /// Floors (area objects) selected by the user in ETABS.
         /// </summary>
-        public ObservableCollection<string> SelectedFloors { get; } = new();
+        public ObservableCollection<SlabAssignmentRow> SelectedFloors { get; } = new();
 
         /// <summary>
         /// Available shell uniform load set names that can be assigned.
@@ -45,10 +46,14 @@ namespace EShellULoadSetTools.ViewModels
         {
             SelectedFloors.Clear();
 
-            IReadOnlyList<string> selectedFloors = _etabsConnectionService.GetSelectedShellUniqueNames();
+            IReadOnlyList<ShellAreaIdentifier> selectedFloors = _etabsConnectionService.GetSelectedShellAreaIdentifiers();
             foreach (var floor in selectedFloors)
             {
-                SelectedFloors.Add(floor);
+                SelectedFloors.Add(new SlabAssignmentRow
+                {
+                    EtabsUniqueName = floor.UniqueName,
+                    EtabsLabel = floor.Label
+                });
             }
         }
     }
