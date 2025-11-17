@@ -241,9 +241,9 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
         }
 
         /// <summary>
-        /// Returns the unique names (GUIDs) of area objects currently selected in ETABS.
+        /// Returns the unique names (GUIDs) and labels of area objects currently selected in ETABS.
         /// </summary>
-        internal static IReadOnlyList<string> GetSelectedAreaUniqueNames(cSapModel sapModel)
+        internal static IReadOnlyList<ShellAreaIdentifier> GetSelectedAreaIdentifiers(cSapModel sapModel)
         {
             if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
 
@@ -256,13 +256,13 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                 int ret = sapModel.SelectObj.GetSelected(ref numberItems, ref objectTypes, ref objectNames);
                 if (ret != 0 || numberItems <= 0)
                 {
-                    return Array.Empty<string>();
+                    return Array.Empty<ShellAreaIdentifier>();
                 }
 
                 // Only keep ETABS Area objects (documented object type = 5).
                 const int documentedAreaObjectType = 5;
 
-                var uniqueNames = new List<string>();
+                var identifiers = new List<ShellAreaIdentifier>();
 
                 for (int i = 0; i < numberItems; i++)
                 {
@@ -282,15 +282,15 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                         continue;
                     }
 
-                    string guid = string.Empty;
+                    string uniqueName = objectName;
 
                     try
                     {
+                        string guid = string.Empty;
                         int guidRet = sapModel.AreaObj.GetGUID(objectName, ref guid);
                         if (guidRet == 0 && !string.IsNullOrWhiteSpace(guid))
                         {
-                            uniqueNames.Add(guid);
-                            continue;
+                            uniqueName = guid;
                         }
                     }
                     catch
@@ -298,18 +298,43 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                         // Fall back to the object name below if GUID retrieval fails.
                     }
 
-                    uniqueNames.Add(objectName);
+                    string label = objectName;
+                    if (string.IsNullOrWhiteSpace(label))
+                    {
+                        label = uniqueName;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(uniqueName))
+                    {
+                        identifiers.Add(new ShellAreaIdentifier
+                        {
+                            UniqueName = uniqueName,
+                            Label = label
+                        });
+                    }
                 }
 
-                return uniqueNames
-                    .Where(name => !string.IsNullOrWhiteSpace(name))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                return identifiers
+                    .GroupBy(id => id.UniqueName, StringComparer.OrdinalIgnoreCase)
+                    .Select(g => g.First())
                     .ToList();
             }
             catch
             {
-                return Array.Empty<string>();
+                return Array.Empty<ShellAreaIdentifier>();
             }
+        }
+
+        /// <summary>
+        /// Returns the unique names (GUIDs) of area objects currently selected in ETABS.
+        /// </summary>
+        internal static IReadOnlyList<string> GetSelectedAreaUniqueNames(cSapModel sapModel)
+        {
+            return GetSelectedAreaIdentifiers(sapModel)
+                .Select(identifier => identifier.UniqueName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
     }

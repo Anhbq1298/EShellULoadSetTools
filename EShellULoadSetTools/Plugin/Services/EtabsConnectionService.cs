@@ -48,5 +48,10 @@ namespace EShellULoadSetTools.Services
         {
             return UniformLoadSetEtabsHelper.GetSelectedAreaUniqueNames(SapModel);
         }
+
+        public IReadOnlyList<ShellAreaIdentifier> GetSelectedShellAreaIdentifiers()
+        {
+            return UniformLoadSetEtabsHelper.GetSelectedAreaIdentifiers(SapModel);
+        }
     }
 }
