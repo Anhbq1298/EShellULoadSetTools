@@ -45,7 +45,7 @@ namespace EShellULoadSetTools.ViewModels
         {
             SelectedFloors.Clear();
 
-            IReadOnlyList<string> selectedFloors = _etabsConnectionService.GetSelectedFloorNames();
+            IReadOnlyList<string> selectedFloors = _etabsConnectionService.GetSelectedShellUniqueNames();
             foreach (var floor in selectedFloors)
             {
                 SelectedFloors.Add(floor);
