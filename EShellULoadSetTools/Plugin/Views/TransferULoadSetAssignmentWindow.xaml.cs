@@ -40,7 +40,7 @@ namespace EShellULoadSetTools.Views
             };
 
             progressWindow.Show();
-            progressWindow.UpdateProgress(0, "Transferring assignments to SAFE...");
+            progressWindow.SetIndeterminate(true, "Transferring assignments to SAFE...");
 
             var progress = new Progress<int>(p => progressWindow.UpdateProgress(p));
 
