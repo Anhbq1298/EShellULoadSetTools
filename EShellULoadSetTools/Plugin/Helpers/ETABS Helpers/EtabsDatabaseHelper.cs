@@ -21,7 +21,7 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
 
             // Determine the display unit for shell uniform loads based on the
             // current ETABS units (Force / Length^2).
-            string areaUnit = UniformLoadSetEtabsHelper.GetAreaLoadUnitString(sapModel);
+            string areaUnit = EtabsLoadUnitHelper.GetAreaLoadUnitString(sapModel);
 
             cDatabaseTables db = sapModel.DatabaseTables;
 
