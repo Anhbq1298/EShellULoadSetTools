@@ -68,30 +68,6 @@ namespace EShellULoadSetTools.Views
                 {
                     viewModel.ApplyToSafe();
                     MessageBox.Show(
-                        "Shell Uniform Load Sets were applied to the attached SAFE model.",
-                        "SAFE Import",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        "Unable to apply Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
-                        "SAFE Import Error",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void TransferLoadsetDefinitionButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is UniformLoadSetsViewModel viewModel)
-            {
-                try
-                {
-                    viewModel.TransferLoadsetDefinitions();
-                    MessageBox.Show(
                         "Shell Uniform Load Sets were transferred to the attached SAFE model.",
                         "SAFE Import",
                         MessageBoxButton.OK,
@@ -100,7 +76,7 @@ namespace EShellULoadSetTools.Views
                 catch (Exception ex)
                 {
                     MessageBox.Show(
-                        "Unable to transfer Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
+                        "Unable to apply Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
                         "SAFE Import Error",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
