@@ -31,16 +31,45 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
             var db = sapModel.DatabaseTables;
 
             // Ensure the table is available in this version of SAFE.
-            string[] availableTables = Array.Empty<string>();
-            db.GetAvailableTables(ref availableTables);
-            if (!availableTables.Any(t => string.Equals(t, TableKey, StringComparison.OrdinalIgnoreCase)))
+            int availableCount = 0;
+            string[] availableTableKeys = Array.Empty<string>();
+            string[] availableTableNames = Array.Empty<string>();
+            int[] availableImportTypes = Array.Empty<int>();
+
+            int availableRet = db.GetAvailableTables(
+                ref availableCount,
+                ref availableTableKeys,
+                ref availableTableNames,
+                ref availableImportTypes);
+
+            if (availableRet != 0 || availableCount <= 0 || availableTableKeys.Length == 0)
+            {
+                throw new InvalidOperationException("SAFE returned no available tables.");
+            }
+
+            if (!availableTableKeys.Any(t => string.Equals(t, TableKey, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new InvalidOperationException($"SAFE table '{TableKey}' is not available in this model.");
             }
 
+            int tableVersion = 0;
+            int numberFields = 0;
             string[] fieldKeys = Array.Empty<string>();
-            int ret = db.GetAllFieldsInTable(TableKey, ref fieldKeys);
-            if (ret != 0 || fieldKeys.Length == 0)
+            string[] fieldNames = Array.Empty<string>();
+            string[] descriptions = Array.Empty<string>();
+            string[] unitStrings = Array.Empty<string>();
+            bool[] isImportable = Array.Empty<bool>();
+
+            int ret = db.GetAllFieldsInTable(
+                TableKey,
+                ref tableVersion,
+                ref numberFields,
+                ref fieldKeys,
+                ref fieldNames,
+                ref descriptions,
+                ref unitStrings,
+                ref isImportable);
+            if (ret != 0 || numberFields <= 0 || fieldKeys.Length == 0)
             {
                 throw new InvalidOperationException($"SAFE table '{TableKey}' returned no fields.");
             }
@@ -67,16 +96,41 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
                 tableData[offset + valueIndex] = row.LoadValue.ToString(CultureInfo.InvariantCulture);
             }
 
-            ret = db.SetTableForEditingArray(TableKey, fieldKeys, rowList.Count, ref tableData);
+            string[] fieldsKeysIncluded = fieldKeys;
+
+            ret = db.SetTableForEditingArray(
+                TableKey,
+                ref tableVersion,
+                ref fieldsKeysIncluded,
+                rowList.Count,
+                ref tableData);
             if (ret != 0)
             {
                 throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{TableKey}'.");
             }
 
-            ret = db.ApplyEditedTables();
-            if (ret != 0)
+            bool fillImportLog = true;
+            int numFatalErrors = 0;
+            int numErrorMessages = 0;
+            int numWarningMessages = 0;
+            int numInfoMessages = 0;
+            string importLog = string.Empty;
+
+            ret = db.ApplyEditedTables(
+                fillImportLog,
+                ref numFatalErrors,
+                ref numErrorMessages,
+                ref numWarningMessages,
+                ref numInfoMessages,
+                ref importLog);
+
+            if (ret != 0 || numFatalErrors > 0)
             {
-                throw new InvalidOperationException($"SAFE returned error code {ret} when applying '{TableKey}'.");
+                string details = string.IsNullOrWhiteSpace(importLog)
+                    ? ""
+                    : $" Import log: {importLog}";
+
+                throw new InvalidOperationException($"SAFE returned error code {ret} when applying '{TableKey}'.{details}");
             }
         }
 
