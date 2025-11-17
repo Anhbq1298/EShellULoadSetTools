@@ -1,5 +1,4 @@
 using System;
-using EShellULoadSetTools.Helpers.SAFEHelpers;
 using SAFEv1;
 
 namespace EShellULoadSetTools.Services
@@ -11,6 +10,7 @@ namespace EShellULoadSetTools.Services
     public class CSISafeConnectionService : ICSISafeConnectionService
     {
         private readonly cHelper _helper;
+        private readonly SafeAttachService _safeAttachService;
         private cOAPI? _safeApi;
         private cSapModel? _sapModel;
 
@@ -22,6 +22,7 @@ namespace EShellULoadSetTools.Services
         internal CSISafeConnectionService(cHelper helper)
         {
             _helper = helper ?? throw new ArgumentNullException(nameof(helper));
+            _safeAttachService = new SafeAttachService(_helper);
         }
 
         public bool IsInitialized => _sapModel is not null;
@@ -30,12 +31,9 @@ namespace EShellULoadSetTools.Services
         {
             try
             {
-                //get the active object
-                //SAFE uses API infrastructure from ETABS; as a consequence, the main connection object is called the ETABSObject
-                var (safeObject, sapModel) = SafeApiHelper.AttachToActiveSafe(_helper);
-
-                _safeApi = safeObject;
-                _sapModel = sapModel;
+                _safeAttachService.Attach();
+                _safeApi = _safeAttachService.GetSafeObject();
+                _sapModel = _safeAttachService.GetSafeModel();
             }
             catch (Exception ex)
             {

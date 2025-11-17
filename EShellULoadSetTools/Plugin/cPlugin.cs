@@ -50,7 +50,7 @@ namespace EShellULoadSetTools
                 viewModel.LoadFromEtabs();
 
                 // Create WPF Window as View.
-                var window = new UniformLoadSetsWindowView
+                var window = new UniformLoadSetManagerForm
                 {
                     DataContext = viewModel,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen

@@ -39,6 +39,10 @@
             <Button Content="Attach To SAFE"
                     Padding="8,4"
                     Click="AttachToSafeButton_Click" />
+            <Button Content="Apply To SAFE"
+                    Padding="8,4"
+                    Margin="8,0,0,0"
+                    Click="ApplyToSafeButton_Click" />
         </StackPanel>
 
 

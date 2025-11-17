@@ -48,6 +48,18 @@ namespace EShellULoadSetTools.ViewModels
         public ObservableCollection<ShellUniformLoadSetRecord> SelectedRecords { get; }
 
         /// <summary>
+        /// Exposes the rows shown in the UI in a DTO format expected by the importer.
+        /// </summary>
+        public IReadOnlyList<UniformLoadSetRow> SelectedRowsForImport => SelectedRecords
+            .Select(r => new UniformLoadSetRow
+            {
+                Name = r.ShellUniformLoadSetName,
+                LoadPattern = r.LoadSetLoadPattern,
+                LoadValue = r.LoadPatternValue
+            })
+            .ToList();
+
+        /// <summary>
         /// Currently selected node in the TreeView. This is used by the View
         /// to display the detail DataGrid for the selected shell uniform load set.
         /// </summary>
@@ -189,6 +201,20 @@ namespace EShellULoadSetTools.ViewModels
             _safeConnectionService = safeConnectionService;
             RootNodes = new ObservableCollection<UniformLoadSetNodeViewModel>();
             SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
+        }
+
+        public void ApplyToSafe()
+        {
+            if (_safeConnectionService?.IsInitialized != true)
+            {
+                throw new InvalidOperationException("Attach to SAFE before applying changes.");
+            }
+
+            var safeModel = _safeConnectionService.GetSafeModel();
+            ShellUniformLoadSetImporter.Import(safeModel, SelectedRowsForImport);
+
+            // Refresh SAFE info in case the connection changed units or model metadata.
+            LoadSafeModelInfo();
         }
 
         public void AttachToSafe()

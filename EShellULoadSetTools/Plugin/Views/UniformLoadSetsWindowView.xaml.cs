@@ -4,6 +4,7 @@
 // Purpose : Simple WPF Window acting as View for Shell Uniform Load Sets.
 // -------------------------------------------------------------
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using EShellULoadSetTools.ViewModels;
@@ -56,6 +57,30 @@ namespace EShellULoadSetTools.Views
             if (DataContext is UniformLoadSetsViewModel viewModel)
             {
                 viewModel.AttachToSafe();
+            }
+        }
+
+        private void ApplyToSafeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is UniformLoadSetsViewModel viewModel)
+            {
+                try
+                {
+                    viewModel.ApplyToSafe();
+                    MessageBox.Show(
+                        "Shell Uniform Load Sets were applied to the attached SAFE model.",
+                        "SAFE Import",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Unable to apply Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
+                        "SAFE Import Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             }
         }
     }
