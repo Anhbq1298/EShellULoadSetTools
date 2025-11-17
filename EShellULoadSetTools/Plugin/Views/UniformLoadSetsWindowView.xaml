@@ -8,7 +8,9 @@
         Title="SHELL UNIFORM LOAD SET TOOLBOX"
         Height="720"
         Width="600"
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <!-- Right-aligned numeric cell style -->
@@ -25,25 +27,19 @@
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <!-- 0: ETABS model info -->
             <RowDefinition Height="Auto" />
+            <!-- 1: SAFE model info -->
             <RowDefinition Height="Auto" />
+            <!-- 2: SAFE actions (Attach) -->
             <RowDefinition />
+            <!-- 3: Main content -->
             <RowDefinition Height="Auto" />
+            <!-- 4: Close button -->
         </Grid.RowDefinitions>
 
-        <!-- SAFE actions -->
-        <StackPanel Grid.Row="0"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,0,8">
-            <Button Content="Attach To SAFE"
-                    Padding="8,4"
-                    Click="AttachToSafeButton_Click" />
-        </StackPanel>
-
-
         <!-- Current model info -->
-        <Grid Grid.Row="1" Margin="0,0,0,8">
+        <Grid Grid.Row="0" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.75*" />
                 <ColumnDefinition Width="1.25*" />
@@ -57,18 +53,21 @@
                        FontSize="12"
                        Margin="0,0,0,0" />
             <TextBlock Grid.Column="1"
-                       Text="{Binding CurrentModelFileName}" Margin="8,0,0,0" />
+                       Text="{Binding CurrentModelFileName}"
+                       Margin="8,0,0,0" />
             <TextBlock Grid.Column="2"
                        Text="MODEL UNITS:"
                        FontWeight="Bold"
                        FontSize="12"
-                       Margin="8,0,0,0" Grid.ColumnSpan="2" />
+                       Margin="8,0,0,0"
+                       Grid.ColumnSpan="2" />
             <TextBlock Grid.Column="3"
-                       Text="{Binding CurrentUnitsSummary}" Margin="8,0,0,0" />
+                       Text="{Binding CurrentUnitsSummary}"
+                       Margin="8,0,0,0" />
         </Grid>
 
         <!-- SAFE model info -->
-        <Grid Grid.Row="2" Margin="0,0,0,16">
+        <Grid Grid.Row="1" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.75*" />
                 <ColumnDefinition Width="1.25*" />
@@ -81,14 +80,31 @@
                        FontWeight="Bold"
                        FontSize="12" />
             <TextBlock Grid.Column="1"
-                       Text="{Binding CurrentSafeModelFileName}" Margin="8,0,0,0" />
+                       Text="{Binding CurrentSafeModelFileName}"
+                       Margin="8,0,0,0" />
             <TextBlock Grid.Column="2"
                        Text="SAFE MODEL UNITS:"
                        FontWeight="Bold"
                        FontSize="12"
-                       Margin="8,0,0,0" Grid.ColumnSpan="2" />
+                       Margin="8,0,0,0"
+                       Grid.ColumnSpan="2" />
             <TextBlock Grid.Column="3"
-                       Text="{Binding CurrentSafeUnitsSummary}" Margin="8,0,0,0" />
+                       Text="{Binding CurrentSafeUnitsSummary}"
+                       Margin="8,0,0,0" />
+        </Grid>
+
+        <!-- SAFE actions (Attach button moved here) -->
+        <Grid Grid.Row="2" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="Attach To SAFE"
+                    Padding="12,4"
+                    HorizontalAlignment="Left"
+                    Click="AttachToSafeButton_Click" />
         </Grid>
 
         <!-- Main content area: TreeView on the left, DataGrid on the right -->
@@ -112,11 +128,15 @@
                     <Button Content="Select All"
                             Padding="8,4"
                             Margin="0,4,0,4"
-                            Click="SelectAllButton_Click" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            Click="SelectAllButton_Click"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
                     <Button Content="Clear Selection"
                             Padding="8,4"
                             Margin="8,4,8,4"
-                            Click="DeselectAllButton_Click" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            Click="DeselectAllButton_Click"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center" />
                 </StackPanel>
 
                 <!-- TreeView bound to RootNodes -->
