@@ -31,27 +31,27 @@ namespace EShellULoadSetTools.Services
 
         public string GetAreaLoadUnitString()
         {
-            return UniformLoadSetEtabsHelper.GetAreaLoadUnitString(SapModel);
+            return EtabsLoadUnitHelper.GetAreaLoadUnitString(SapModel);
         }
 
         public string GetModelFileName()
         {
-            return UniformLoadSetEtabsHelper.GetModelFileName(SapModel);
+            return EtabsModelInfoHelper.GetModelFileName(SapModel);
         }
 
         public (string lengthUnit, string forceUnit, string temperatureUnit) GetPresentUnitStrings()
         {
-            return UniformLoadSetEtabsHelper.GetPresentUnitStrings(SapModel);
+            return EtabsModelInfoHelper.GetPresentUnitStrings(SapModel);
         }
 
         public IReadOnlyList<string> GetSelectedShellUniqueNames()
         {
-            return UniformLoadSetEtabsHelper.GetSelectedAreaUniqueNames(SapModel);
+            return EtabsSelectionHelper.GetSelectedAreaUniqueNames(SapModel);
         }
 
         public IReadOnlyList<ShellAreaIdentifier> GetSelectedShellAreaIdentifiers()
         {
-            return UniformLoadSetEtabsHelper.GetSelectedAreaIdentifiers(SapModel);
+            return EtabsSelectionHelper.GetSelectedAreaIdentifiers(SapModel);
         }
 
         public IReadOnlyDictionary<string, string> GetShellAreaUniformLoadSetAssignments()
