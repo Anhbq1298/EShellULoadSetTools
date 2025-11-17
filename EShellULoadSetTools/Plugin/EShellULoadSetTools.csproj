@@ -60,4 +60,12 @@
     </None>
   </ItemGroup>
 
+  <!-- Prevent COM interop assemblies from being shadow-copied into the plugin output. -->
+  <Target Name="RemoveLocalEtabsInterop" AfterBuild>
+    <ItemGroup>
+      <InteropDlls Include="$(OutDir)ETABSv1.dll;$(OutDir)CSIAPIv1.dll;$(OutDir)SAFEv1.dll" />
+    </ItemGroup>
+    <Delete Files="@(InteropDlls)" Condition="Exists('%(InteropDlls.Identity)')" ContinueOnError="true" />
+  </Target>
+
 </Project>
