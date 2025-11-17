@@ -217,6 +217,19 @@ namespace EShellULoadSetTools.ViewModels
             LoadSafeModelInfo();
         }
 
+        public void TransferLoadsetDefinitions()
+        {
+            if (_safeConnectionService?.IsInitialized != true)
+            {
+                throw new InvalidOperationException("Attach to SAFE before transferring load set definitions.");
+            }
+
+            var safeModel = _safeConnectionService.GetSafeModel();
+            ShellUniformLoadSetImporter.Import(safeModel, SelectedRowsForImport);
+
+            LoadSafeModelInfo();
+        }
+
         public void AttachToSafe()
         {
             if (_safeConnectionService == null)
