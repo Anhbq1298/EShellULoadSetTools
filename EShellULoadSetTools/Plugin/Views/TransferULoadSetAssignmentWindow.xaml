@@ -4,7 +4,7 @@
         Title="Transfer ULoadSet Assignment"
         Height="450"
         Width="700"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid Margin="12">
         <Grid.RowDefinitions>

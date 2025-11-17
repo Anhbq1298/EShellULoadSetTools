@@ -96,8 +96,7 @@ namespace EShellULoadSetTools.Views
             var assignmentViewModel = viewModel.CreateTransferAssignmentViewModel();
             var window = new TransferULoadSetAssignmentWindow
             {
-                DataContext = assignmentViewModel,
-                Owner = this
+                DataContext = assignmentViewModel
             };
 
             window.Closed += TransferAssignmentWindowOnClosed;
