@@ -78,6 +78,36 @@ namespace EShellULoadSetTools.ViewModels
             }
         }
 
+        /// <summary>
+        /// Transfers the selected uniform load set assignments to the connected SAFE model.
+        /// </summary>
+        public void TransferAssignmentsToSafe()
+        {
+            if (_safeConnectionService?.IsInitialized != true)
+            {
+                throw new InvalidOperationException("Attach to SAFE before transferring assignments.");
+            }
+
+            var safeModel = _safeConnectionService.GetSafeModel();
+
+            var assignmentRows = SelectedFloors
+                .Where(f => !string.IsNullOrWhiteSpace(f.SafeUniqueName) &&
+                            !string.IsNullOrWhiteSpace(f.AssignedLoadSet))
+                .Select(f => new AreaUniformLoadSetAssignmentRow
+                {
+                    SafeUniqueName = f.SafeUniqueName,
+                    UniformLoadSetName = f.AssignedLoadSet
+                })
+                .ToList();
+
+            if (assignmentRows.Count == 0)
+            {
+                return;
+            }
+
+            AreaUniformLoadSetAssignmentImporter.Import(safeModel, assignmentRows);
+        }
+
         private IReadOnlyDictionary<string, List<string>> BuildSafeControlPointIndex()
         {
             if (_safeConnectionService?.IsInitialized != true)
