@@ -259,8 +259,12 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                     return Array.Empty<string>();
                 }
 
-                // 3 is the ETABS object type for area objects.
-                const int areaObjectType = 3;
+                // Use the ETABS enum so the code stays correct if the numeric value changes.
+                // Some API versions expose the member as AreaObject; fall back to the
+                // legacy numeric value (3) if parsing fails so we still capture areas.
+                int areaObjectType = Enum.TryParse("AreaObject", out eObjectType parsedArea)
+                    ? (int)parsedArea
+                    : 3;
 
                 var uniqueNames = new List<string>();
 
