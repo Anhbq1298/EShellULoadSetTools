@@ -259,8 +259,8 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                     return Array.Empty<string>();
                 }
 
-                // 3 is the ETABS object type for area objects.
-                const int areaObjectType = 3;
+                // Only keep ETABS Area objects (documented object type = 5).
+                const int documentedAreaObjectType = 5;
 
                 var uniqueNames = new List<string>();
 
@@ -271,7 +271,7 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                         continue;
                     }
 
-                    if (objectTypes[i] != areaObjectType)
+                    if (objectTypes[i] != documentedAreaObjectType)
                     {
                         continue;
                     }
