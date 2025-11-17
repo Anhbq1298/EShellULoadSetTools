@@ -241,9 +241,9 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
         }
 
         /// <summary>
-        /// Returns the names of area objects currently selected in ETABS.
+        /// Returns the unique names (GUIDs) of area objects currently selected in ETABS.
         /// </summary>
-        internal static IReadOnlyList<string> GetSelectedAreaNames(cSapModel sapModel)
+        internal static IReadOnlyList<string> GetSelectedAreaUniqueNames(cSapModel sapModel)
         {
             if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
 
@@ -262,10 +262,46 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                 // 3 is the ETABS object type for area objects.
                 const int areaObjectType = 3;
 
-                return objectTypes
-                    .Select((type, index) => (type, index))
-                    .Where(t => t.type == areaObjectType && t.index < objectNames.Length)
-                    .Select(t => objectNames[t.index])
+                var uniqueNames = new List<string>();
+
+                for (int i = 0; i < numberItems; i++)
+                {
+                    if (i >= objectTypes.Length || i >= objectNames.Length)
+                    {
+                        continue;
+                    }
+
+                    if (objectTypes[i] != areaObjectType)
+                    {
+                        continue;
+                    }
+
+                    string objectName = objectNames[i];
+                    if (string.IsNullOrWhiteSpace(objectName))
+                    {
+                        continue;
+                    }
+
+                    string guid = string.Empty;
+
+                    try
+                    {
+                        int guidRet = sapModel.AreaObj.GetGUID(objectName, ref guid);
+                        if (guidRet == 0 && !string.IsNullOrWhiteSpace(guid))
+                        {
+                            uniqueNames.Add(guid);
+                            continue;
+                        }
+                    }
+                    catch
+                    {
+                        // Fall back to the object name below if GUID retrieval fails.
+                    }
+
+                    uniqueNames.Add(objectName);
+                }
+
+                return uniqueNames
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
