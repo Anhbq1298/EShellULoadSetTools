@@ -75,8 +75,8 @@ namespace EShellULoadSetTools
                     }
                 };
 
-                // Show window as modal dialog. This call blocks until the user closes it.
-                window.ShowDialog();
+                // Show window modelessly so that ETABS remains interactive while the plugin is open.
+                window.Show();
             }
             catch (Exception ex)
             {

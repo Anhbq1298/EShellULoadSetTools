@@ -19,12 +19,6 @@ namespace EShellULoadSetTools.Views
                 return;
             }
 
-            MessageBox.Show(
-                "ETABS will appear. Select the floor (shell/area) objects you want to transfer and then click 'Done Selection' in this window to import them.",
-                "Select Floors in ETABS",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
             HidePluginForEtabsSelection();
         }
 

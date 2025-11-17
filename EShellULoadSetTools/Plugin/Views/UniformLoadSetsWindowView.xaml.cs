@@ -98,7 +98,7 @@ namespace EShellULoadSetTools.Views
                 Owner = this
             };
 
-            window.ShowDialog();
+            window.Show();
         }
     }
 }
