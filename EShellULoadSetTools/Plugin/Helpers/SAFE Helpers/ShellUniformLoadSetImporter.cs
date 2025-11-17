@@ -30,53 +30,26 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
             var db = sapModel.DatabaseTables;
 
-            // Ensure the table is available in this version of SAFE.
-            int availableCount = 0;
-            string[] availableTableKeys = Array.Empty<string>();
-            string[] availableTableNames = Array.Empty<string>();
-            int[] availableImportTypes = Array.Empty<int>();
+            // Ensure the table is available in this version of SAFE. This importer is the only
+            // place in the add-in that writes to SAFE, so we delegate probing and optional
+            // creation to the shared SafeDatabaseHelper for reuse across future importers.
+            bool tableAvailable = SafeDatabaseHelper.EnsureTableAvailable(
+                db,
+                TableKey,
+                () => SafeDatabaseHelper.StageEmptyTableFromMetadata(db, TableKey));
 
-            int availableRet = db.GetAvailableTables(
-                ref availableCount,
-                ref availableTableKeys,
-                ref availableTableNames,
-                ref availableImportTypes);
-
-            if (availableRet != 0 || availableCount <= 0 || availableTableKeys.Length == 0)
-            {
-                throw new InvalidOperationException("SAFE returned no available tables.");
-            }
-
-            if (!availableTableKeys.Any(t => string.Equals(t, TableKey, StringComparison.OrdinalIgnoreCase)))
+            if (!tableAvailable)
             {
                 throw new InvalidOperationException($"SAFE table '{TableKey}' is not available in this model.");
             }
 
-            int tableVersion = 0;
-            int numberFields = 0;
-            string[] fieldKeys = Array.Empty<string>();
-            string[] fieldNames = Array.Empty<string>();
-            string[] descriptions = Array.Empty<string>();
-            string[] unitStrings = Array.Empty<string>();
-            bool[] isImportable = Array.Empty<bool>();
+            var tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
+            int tableVersion = tableFields.tableVersion;
+            string[] fieldKeys = tableFields.fieldKeys;
 
-            int ret = db.GetAllFieldsInTable(
-                TableKey,
-                ref tableVersion,
-                ref numberFields,
-                ref fieldKeys,
-                ref fieldNames,
-                ref descriptions,
-                ref unitStrings,
-                ref isImportable);
-            if (ret != 0 || numberFields <= 0 || fieldKeys.Length == 0)
-            {
-                throw new InvalidOperationException($"SAFE table '{TableKey}' returned no fields.");
-            }
-
-            int setNameIndex = FindFieldIndex(fieldKeys, "name", "set");
-            int patternIndex = FindFieldIndex(fieldKeys, "pattern", "loadpat");
-            int valueIndex = FindFieldIndex(fieldKeys, "value", "magnitude", "val");
+            int setNameIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "name", "set");
+            int patternIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "pattern", "loadpat");
+            int valueIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "value", "magnitude", "val");
 
             if (setNameIndex < 0 || patternIndex < 0 || valueIndex < 0)
             {
@@ -98,7 +71,7 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
             string[] fieldsKeysIncluded = fieldKeys;
 
-            ret = db.SetTableForEditingArray(
+            int ret = db.SetTableForEditingArray(
                 TableKey,
                 ref tableVersion,
                 ref fieldsKeysIncluded,
@@ -134,23 +107,5 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
             }
         }
 
-        private static int FindFieldIndex(IReadOnlyList<string> fieldKeys, params string[] tokens)
-        {
-            for (int i = 0; i < fieldKeys.Count; i++)
-            {
-                string key = fieldKeys[i] ?? string.Empty;
-                string lowered = key.ToLowerInvariant();
-
-                foreach (string token in tokens)
-                {
-                    if (lowered.Contains(token))
-                    {
-                        return i;
-                    }
-                }
-            }
-
-            return -1;
-        }
     }
 }
