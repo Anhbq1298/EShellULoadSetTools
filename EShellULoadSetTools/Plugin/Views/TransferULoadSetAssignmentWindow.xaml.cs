@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows;
 using EShellULoadSetTools.ViewModels;
 
@@ -26,16 +27,30 @@ namespace EShellULoadSetTools.Views
             Close();
         }
 
-        private void TransferAssignmentButton_OnClick(object sender, RoutedEventArgs e)
+        private async void TransferAssignmentButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (DataContext is not TransferULoadSetAssignmentViewModel viewModel)
             {
                 return;
             }
 
+            var progressWindow = new ProgressWindow
+            {
+                Owner = this
+            };
+
+            progressWindow.Show();
+            progressWindow.UpdateProgress(0, "Transferring assignments to SAFE...");
+
+            var progress = new Progress<int>(p => progressWindow.UpdateProgress(p));
+
             try
             {
-                viewModel.TransferAssignmentsToSafe();
+                await Task.Run(() => viewModel.TransferAssignmentsToSafe(progress));
+
+                progressWindow.UpdateProgress(100);
+                progressWindow.Close();
+
                 MessageBox.Show(
                     "Uniform load set assignments transferred to SAFE.",
                     "Transfer Complete",
@@ -44,6 +59,8 @@ namespace EShellULoadSetTools.Views
             }
             catch (System.Exception ex)
             {
+                progressWindow.Close();
+
                 MessageBox.Show(
                     "Unable to transfer assignments to SAFE:" + System.Environment.NewLine + ex.Message,
                     "SAFE Transfer Error",

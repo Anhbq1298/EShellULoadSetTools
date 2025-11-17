@@ -5,6 +5,7 @@
 // -------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using EShellULoadSetTools.ViewModels;
@@ -62,27 +63,45 @@ namespace EShellULoadSetTools.Views
             }
         }
 
-        private void ApplyToSafeButton_Click(object sender, RoutedEventArgs e)
+        private async void ApplyToSafeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DataContext is UniformLoadSetsViewModel viewModel)
+            if (DataContext is not UniformLoadSetsViewModel viewModel)
             {
-                try
-                {
-                    viewModel.ApplyToSafe();
-                    MessageBox.Show(
-                        "Shell Uniform Load Sets were transferred to the attached SAFE model.",
-                        "SAFE Import",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        "Unable to apply Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
-                        "SAFE Import Error",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+                return;
+            }
+
+            var progressWindow = new ProgressWindow
+            {
+                Owner = this
+            };
+
+            progressWindow.Show();
+            progressWindow.UpdateProgress(0, "Transferring Shell Uniform Load Sets to SAFE...");
+
+            var progress = new Progress<int>(p => progressWindow.UpdateProgress(p));
+
+            try
+            {
+                await Task.Run(() => viewModel.ApplyToSafe(progress));
+
+                progressWindow.UpdateProgress(100);
+                progressWindow.Close();
+
+                MessageBox.Show(
+                    "Shell Uniform Load Sets were transferred to the attached SAFE model.",
+                    "SAFE Import",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                progressWindow.Close();
+
+                MessageBox.Show(
+                    "Unable to apply Shell Uniform Load Sets to SAFE:" + Environment.NewLine + ex.Message,
+                    "SAFE Import Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

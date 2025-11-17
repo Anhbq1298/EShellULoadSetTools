@@ -17,7 +17,10 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
         /// <summary>
         /// Writes the provided rows into the SAFE "Shell Uniform Load Sets" table.
         /// </summary>
-        public static void Import(cSapModel sapModel, IEnumerable<UniformLoadSetRow> rows)
+        public static void Import(
+            cSapModel sapModel,
+            IEnumerable<UniformLoadSetRow> rows,
+            IProgress<int>? progress = null)
         {
             if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
             if (rows == null) throw new ArgumentNullException(nameof(rows));
@@ -73,6 +76,8 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
                     tableData[offset + setNameIndex] = row.Name ?? string.Empty;
                     tableData[offset + patternIndex] = row.LoadPattern ?? string.Empty;
                     tableData[offset + valueIndex] = row.LoadValue.ToString(CultureInfo.InvariantCulture);
+
+                    ReportProgress(progress, r + 1, rowList.Count);
                 }
 
                 string[] fieldsKeysIncluded = fieldKeys;
@@ -128,6 +133,19 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
                 throw new InvalidOperationException($"SAFE returned error code {ret} when applying '{TableKey}'.{details}");
             }
+
+            ReportProgress(progress, rowList.Count, rowList.Count);
+        }
+
+        private static void ReportProgress(IProgress<int>? progress, int completed, int total)
+        {
+            if (progress == null || total <= 0)
+            {
+                return;
+            }
+
+            int percent = (int)Math.Round((double)completed * 100 / total);
+            progress.Report(percent);
         }
 
     }
