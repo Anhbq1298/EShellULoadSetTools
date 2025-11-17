@@ -46,10 +46,6 @@
             <Button Content="Attach To SAFE"
                     Padding="8,4"
                     Click="AttachToSafeButton_Click" />
-            <Button Content="Transfer Loadset Definition"
-                    Padding="8,4"
-                    Margin="8,0,0,0"
-                    Click="TransferLoadsetDefinitionButton_Click" />
             <Button Content="Apply To SAFE"
                     Padding="8,4"
                     Margin="8,0,0,0"
