@@ -81,7 +81,7 @@ namespace EShellULoadSetTools.ViewModels
         /// <summary>
         /// Transfers the selected uniform load set assignments to the connected SAFE model.
         /// </summary>
-        public void TransferAssignmentsToSafe(IProgress<int>? progress = null)
+        public void TransferAssignmentsToSafe()
         {
             if (_safeConnectionService?.IsInitialized != true)
             {
@@ -105,8 +105,7 @@ namespace EShellULoadSetTools.ViewModels
                 return;
             }
 
-            progress?.Report(0);
-            AreaUniformLoadSetAssignmentImporter.Import(safeModel, assignmentRows, progress);
+            AreaUniformLoadSetAssignmentImporter.Import(safeModel, assignmentRows);
         }
 
         private IReadOnlyDictionary<string, List<string>> BuildSafeControlPointIndex()

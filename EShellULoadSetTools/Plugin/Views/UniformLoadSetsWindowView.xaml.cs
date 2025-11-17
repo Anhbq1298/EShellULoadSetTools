@@ -78,13 +78,9 @@ namespace EShellULoadSetTools.Views
             progressWindow.Show();
             progressWindow.SetIndeterminate(true, "Transferring Shell Uniform Load Sets to SAFE...");
 
-            var progress = new Progress<int>(p => progressWindow.UpdateProgress(p));
-
             try
             {
-                await Task.Run(() => viewModel.ApplyToSafe(progress));
-
-                progressWindow.UpdateProgress(100);
+                await Task.Run(() => viewModel.ApplyToSafe());
                 progressWindow.Close();
 
                 MessageBox.Show(
