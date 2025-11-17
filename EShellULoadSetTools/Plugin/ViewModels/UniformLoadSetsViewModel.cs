@@ -216,7 +216,8 @@ namespace EShellULoadSetTools.ViewModels
         {
             return new TransferULoadSetAssignmentViewModel(
                 _etabsConnectionService,
-                GetLoadSetNames());
+                GetLoadSetNames(),
+                _safeConnectionService);
         }
 
         public void ApplyToSafe()

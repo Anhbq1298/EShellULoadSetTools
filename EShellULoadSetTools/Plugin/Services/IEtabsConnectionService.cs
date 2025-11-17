@@ -56,5 +56,12 @@ namespace EShellULoadSetTools.Services
         /// keyed by area unique name.
         /// </summary>
         IReadOnlyDictionary<string, string> GetShellAreaUniformLoadSetAssignments();
+
+        /// <summary>
+        /// Builds the control point coordinate identifier for the specified ETABS area object.
+        /// </summary>
+        /// <param name="areaUniqueName">ETABS area object unique name.</param>
+        /// <returns>Formatted identifier string or <c>null</c> if unavailable.</returns>
+        string? GetShellAreaControlPointIdentifier(string areaUniqueName);
     }
 }
