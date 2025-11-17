@@ -40,8 +40,6 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
             int tableVersion = 0;
             string[] fieldKeysIncluded = Array.Empty<string>();
             int numberRecords = 0;
-            int numberFieldKeys = 0;
-            int dataRowHeight = 0;
             string[] tableData = Array.Empty<string>();
 
             int ret = db.GetTableForDisplayArray(
@@ -51,8 +49,6 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                 ref tableVersion,
                 ref fieldKeysIncluded,
                 ref numberRecords,
-                ref numberFieldKeys,
-                ref dataRowHeight,
                 ref tableData);
 
             if (ret != 0 || numberRecords <= 0 || fieldKeysIncluded.Length == 0)
