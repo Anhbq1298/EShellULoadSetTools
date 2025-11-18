@@ -59,9 +59,14 @@ namespace EShellULoadSetTools.Services
             return EtabsDatabaseHelper.GetAreaUniformLoadSetAssignments(SapModel);
         }
 
-        public string? GetShellAreaControlPointIdentifier(string areaUniqueName)
+        public string? GetShellAreaControlPointIdentifier(
+            string areaUniqueName,
+            double coordinateScaleFactor = 1.0)
         {
-            return EtabsAreaGeometryHelper.GetAreaControlPointIdentifier(SapModel, areaUniqueName);
+            return EtabsAreaGeometryHelper.GetAreaControlPointIdentifier(
+                SapModel,
+                areaUniqueName,
+                coordinateScaleFactor);
         }
     }
 }

@@ -61,7 +61,8 @@ namespace EShellULoadSetTools.Services
         /// Builds the control point coordinate identifier for the specified ETABS area object.
         /// </summary>
         /// <param name="areaUniqueName">ETABS area object unique name.</param>
+        /// <param name="coordinateScaleFactor">Scale factor to apply to point coordinates before formatting.</param>
         /// <returns>Formatted identifier string or <c>null</c> if unavailable.</returns>
-        string? GetShellAreaControlPointIdentifier(string areaUniqueName);
+        string? GetShellAreaControlPointIdentifier(string areaUniqueName, double coordinateScaleFactor = 1.0);
     }
 }

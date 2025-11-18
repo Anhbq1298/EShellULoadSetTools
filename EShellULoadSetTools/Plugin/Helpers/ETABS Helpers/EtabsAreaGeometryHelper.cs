@@ -18,10 +18,15 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
         /// <param name="sapModel">Active ETABS model reference.</param>
         /// <param name="areaUniqueName">ETABS area object unique name.</param>
         /// <returns>Formatted coordinate identifier or <c>null</c> when unavailable.</returns>
-        internal static string? GetAreaControlPointIdentifier(cSapModel sapModel, string areaUniqueName)
+        internal static string? GetAreaControlPointIdentifier(
+            cSapModel sapModel,
+            string areaUniqueName,
+            double coordinateScaleFactor = 1.0)
         {
             if (sapModel == null) throw new ArgumentNullException(nameof(sapModel));
             if (string.IsNullOrWhiteSpace(areaUniqueName)) return null;
+
+            double scale = coordinateScaleFactor.Equals(0.0) ? 1.0 : coordinateScaleFactor;
 
             try
             {
@@ -47,7 +52,7 @@ namespace EShellULoadSetTools.Helpers.ETABSHelpers
                     double x = 0.0, y = 0.0, z = 0.0;
                     sapModel.PointObj.GetCoordCartesian(pointName, ref x, ref y, ref z);
 
-                    coordinates.Add(FormatCoordinate(x, y));
+                    coordinates.Add(FormatCoordinate(x * scale, y * scale));
                 }
 
                 if (coordinates.Count == 0)
