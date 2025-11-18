@@ -115,7 +115,11 @@ namespace EShellULoadSetTools.Views
             };
 
             window.Closed += TransferAssignmentWindowOnClosed;
+
+            // Show modelessly so ETABS stays fully interactive while the transfer UI is open.
             window.Show();
+            window.Topmost = true;
+            window.Topmost = false;
 
             _previousWindowState = WindowState;
             WindowState = WindowState.Minimized;

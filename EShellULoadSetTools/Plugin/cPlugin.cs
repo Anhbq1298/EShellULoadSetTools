@@ -21,6 +21,9 @@ namespace EShellULoadSetTools
     /// </summary>
     public class cPlugin
     {
+        private static readonly object WindowLock = new();
+        private static UniformLoadSetManagerForm? ActiveWindow;
+
         /// <summary>
         /// Main entry point called by ETABS when the user runs the plugin.
         /// </summary>
@@ -30,6 +33,28 @@ namespace EShellULoadSetTools
         {
             try
             {
+                lock (WindowLock)
+                {
+                    if (ActiveWindow != null && ActiveWindow.IsVisible)
+                    {
+                        ActiveWindow.Activate();
+                        ActiveWindow.Topmost = true;
+                        ActiveWindow.Topmost = false;
+
+                        try
+                        {
+                            // Notify ETABS that this invocation is complete without opening a new window.
+                            ISapPlugin.Finish(0);
+                        }
+                        catch
+                        {
+                            // Ignore any error when calling Finish.
+                        }
+
+                        return;
+                    }
+                }
+
                 var etabsConnectionService = new EtabsConnectionService();
                 etabsConnectionService.Initialize(SapModel);
 
@@ -64,6 +89,11 @@ namespace EShellULoadSetTools
                 // When the window is closed, tell ETABS that the plugin has finished.
                 window.Closed += (s, e) =>
                 {
+                    lock (WindowLock)
+                    {
+                        ActiveWindow = null;
+                    }
+
                     try
                     {
                         // 0 = success, non-zero = error
@@ -74,6 +104,11 @@ namespace EShellULoadSetTools
                         // Ignore any error when calling Finish.
                     }
                 };
+
+                lock (WindowLock)
+                {
+                    ActiveWindow = window;
+                }
 
                 // Show window modelessly so that ETABS remains interactive while the plugin is open.
                 window.Show();
