@@ -27,6 +27,11 @@ namespace EShellULoadSetTools.ViewModels
         /// </summary>
         public ObservableCollection<string> AvailableLoadSets { get; } = new();
 
+        /// <summary>
+        /// Indicates whether a SAFE model is available to receive transfer actions.
+        /// </summary>
+        public bool IsSafeModelAttached => _safeConnectionService?.IsInitialized == true;
+
         public TransferULoadSetAssignmentViewModel(
             IEtabsConnectionService etabsConnectionService,
             IEnumerable<string> loadSetNames,

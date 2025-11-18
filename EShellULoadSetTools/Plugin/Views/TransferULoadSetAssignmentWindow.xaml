@@ -56,6 +56,7 @@
             <Button Content="Transfer Assignment"
                     Width="160"
                     Margin="0,0,8,0"
+                    IsEnabled="{Binding IsSafeModelAttached}"
                     Click="TransferAssignmentButton_OnClick" />
             <Button Content="Close"
                     Width="80"
