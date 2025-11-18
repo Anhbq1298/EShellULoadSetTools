@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using EShellULoadSetTools.Helpers.SAFEHelpers;
+using EShellULoadSetTools.Helpers.UnitConverter;
 using EShellULoadSetTools.Services;
 using EShellULoadSetTools.Models;
 
@@ -54,6 +55,8 @@ namespace EShellULoadSetTools.ViewModels
         /// </summary>
         public async Task RefreshSelectionFromEtabsAsync()
         {
+            double coordinateScaleFactor = GetCoordinateScaleFactor();
+
             var slabRows = await Task.Run(() =>
             {
                 var rows = new List<SlabAssignmentRow>();
@@ -66,7 +69,9 @@ namespace EShellULoadSetTools.ViewModels
                 {
                     loadSetAssignments.TryGetValue(floor.UniqueName, out string? assignedLoadSet);
 
-                    string? controlPointId = _etabsConnectionService.GetShellAreaControlPointIdentifier(floor.UniqueName);
+                    string? controlPointId = _etabsConnectionService.GetShellAreaControlPointIdentifier(
+                        floor.UniqueName,
+                        coordinateScaleFactor);
                     string safeUniqueName = string.Empty;
 
                     if (!string.IsNullOrWhiteSpace(controlPointId) &&
@@ -142,6 +147,30 @@ namespace EShellULoadSetTools.ViewModels
             {
                 return new Dictionary<string, List<string>>();
             }
+        }
+
+        private double GetCoordinateScaleFactor()
+        {
+            try
+            {
+                var etabsUnits = _etabsConnectionService.GetPresentUnitStrings();
+
+                if (_safeConnectionService?.IsInitialized == true)
+                {
+                    var safeModel = _safeConnectionService.GetSafeModel();
+                    var safeUnits = SafeModelInfoHelper.GetPresentUnitStrings(safeModel);
+
+                    return LengthUnitConverter.GetScaleFactorFromEtabsUnit(
+                        etabsUnits.lengthUnit,
+                        safeUnits.lengthUnit);
+                }
+            }
+            catch
+            {
+                // Ignore scaling failures and fall back to a neutral scale factor.
+            }
+
+            return 1.0;
         }
     }
 }
