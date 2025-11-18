@@ -22,7 +22,7 @@ namespace EShellULoadSetTools
     public class cPlugin
     {
         private static readonly object WindowLock = new();
-        private static UniformLoadSetManagerForm? ActiveWindow;
+        private static UniformLoadSetManagerView? ActiveWindow;
 
         /// <summary>
         /// Main entry point called by ETABS when the user runs the plugin.
@@ -75,7 +75,7 @@ namespace EShellULoadSetTools
                 viewModel.LoadFromEtabs();
 
                 // Create WPF Window as View.
-                var window = new UniformLoadSetManagerForm
+                var window = new UniformLoadSetManagerView
                 {
                     DataContext = viewModel,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen

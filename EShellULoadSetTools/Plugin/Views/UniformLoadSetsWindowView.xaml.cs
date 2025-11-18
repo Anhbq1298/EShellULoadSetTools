@@ -70,7 +70,7 @@ namespace EShellULoadSetTools.Views
                 return;
             }
 
-            var progressWindow = new ProgressWindow
+            var progressWindow = new ProgressView
             {
                 Owner = this
             };
@@ -109,7 +109,7 @@ namespace EShellULoadSetTools.Views
             }
 
             var assignmentViewModel = viewModel.CreateTransferAssignmentViewModel();
-            var window = new TransferULoadSetAssignmentWindow
+            var window = new TransferULoadSetAssignmentView
             {
                 DataContext = assignmentViewModel
             };

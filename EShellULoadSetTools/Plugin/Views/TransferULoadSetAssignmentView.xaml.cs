@@ -4,9 +4,9 @@ using EShellULoadSetTools.ViewModels;
 
 namespace EShellULoadSetTools.Views
 {
-    public partial class TransferULoadSetAssignmentWindow : Window
+    public partial class TransferULoadSetAssignmentView : Window
     {
-        public TransferULoadSetAssignmentWindow()
+        public TransferULoadSetAssignmentView()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace EShellULoadSetTools.Views
                 return;
             }
 
-            var progressWindow = new ProgressWindow
+            var progressWindow = new ProgressView
             {
                 Owner = this
             };
