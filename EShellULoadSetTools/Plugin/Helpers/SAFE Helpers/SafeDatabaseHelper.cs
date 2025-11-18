@@ -244,7 +244,26 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
                 ref unitStrings,
                 ref isImportable);
 
-            return ret == 0 && numberFields > 0 && fieldKeys.Length > 0;
+            if (ret != 0 || numberFields <= 0 || fieldKeys.Length == 0)
+            {
+                return false;
+            }
+
+            var importableKeys = new List<string>();
+
+            for (int i = 0; i < Math.Min(fieldKeys.Length, isImportable.Length); i++)
+            {
+                if (isImportable[i])
+                {
+                    importableKeys.Add(fieldKeys[i]);
+                }
+            }
+
+            fieldKeys = importableKeys.Count > 0
+                ? importableKeys.ToArray()
+                : fieldKeys;
+
+            return fieldKeys.Length > 0;
         }
 
         private static bool IsTableAvailable(IEnumerable<string> availableTableKeys, string tableKey)
