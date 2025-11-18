@@ -20,25 +20,33 @@ namespace EShellULoadSetTools.Helpers.UnitConverter
         };
 
         /// <summary>
-        /// Returns the multiplier required to convert a value expressed in <paramref name="fromUnit"/>
-        /// to the equivalent value in <paramref name="toUnit"/>.
+        /// Returns the multiplier required to convert a value from the ETABS model units
+        /// (<paramref name="etabsUnit"/>) to the equivalent value in the target
+        /// <paramref name="targetUnit"/>. The ETABS unit is treated as the canonical
+        /// reference for the conversion.
         /// </summary>
-        internal static double GetScaleFactor(string fromUnit, string toUnit)
+        internal static double GetScaleFactorFromEtabsUnit(string etabsUnit, string targetUnit)
         {
-            double fromFactor = GetNewtonFactor(fromUnit);
-            double toFactor = GetNewtonFactor(toUnit);
+            bool etabsOk = TryGetNewtonFactor(etabsUnit, out double etabsFactor);
+            bool targetOk = TryGetNewtonFactor(targetUnit, out double targetFactor);
 
-            return toFactor.Equals(0) ? 1.0 : fromFactor / toFactor;
-        }
-
-        private static double GetNewtonFactor(string unit)
-        {
-            if (string.IsNullOrWhiteSpace(unit))
+            if (!etabsOk || !targetOk)
             {
                 return 1.0;
             }
 
-            return ForceToNewton.TryGetValue(unit.Trim(), out double factor) ? factor : 1.0;
+            return targetFactor.Equals(0) ? 1.0 : etabsFactor / targetFactor;
+        }
+
+        private static bool TryGetNewtonFactor(string unit, out double factor)
+        {
+            if (string.IsNullOrWhiteSpace(unit))
+            {
+                factor = 1.0;
+                return false;
+            }
+
+            return ForceToNewton.TryGetValue(unit.Trim(), out factor);
         }
     }
 }

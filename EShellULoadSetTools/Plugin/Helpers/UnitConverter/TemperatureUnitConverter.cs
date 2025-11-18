@@ -16,15 +16,17 @@ namespace EShellULoadSetTools.Helpers.UnitConverter
         };
 
         /// <summary>
-        /// Returns the multiplier required to convert a temperature difference expressed in
-        /// <paramref name="fromUnit"/> to the equivalent difference in <paramref name="toUnit"/>.
+        /// Returns the multiplier required to convert a temperature difference from the ETABS
+        /// model units (<paramref name="etabsUnit"/>) to the equivalent difference in the
+        /// target <paramref name="targetUnit"/>. The ETABS unit is treated as the canonical
+        /// reference for the conversion.
         /// </summary>
-        internal static double GetScaleFactor(string fromUnit, string toUnit)
+        internal static double GetScaleFactorFromEtabsUnit(string etabsUnit, string targetUnit)
         {
-            double fromFactor = GetCelsiusDeltaFactor(fromUnit);
-            double toFactor = GetCelsiusDeltaFactor(toUnit);
+            double etabsFactor = GetCelsiusDeltaFactor(etabsUnit);
+            double targetFactor = GetCelsiusDeltaFactor(targetUnit);
 
-            return toFactor.Equals(0) ? 1.0 : fromFactor / toFactor;
+            return targetFactor.Equals(0) ? 1.0 : etabsFactor / targetFactor;
         }
 
         private static double GetCelsiusDeltaFactor(string unit)

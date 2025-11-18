@@ -480,10 +480,11 @@ namespace EShellULoadSetTools.ViewModels
 
         private double GetAreaLoadScaleFactor()
         {
-            double forceScale = ForceUnitConverter.GetScaleFactor(CurrentForceUnit, CurrentSafeForceUnit);
-            double lengthScale = LengthUnitConverter.GetScaleFactor(CurrentLengthUnit, CurrentSafeLengthUnit);
-
-            return forceScale / Math.Pow(lengthScale, 2);
+            return AreaLoadUnitConverter.GetScaleFactorFromEtabsUnits(
+                CurrentForceUnit,
+                CurrentLengthUnit,
+                CurrentSafeForceUnit,
+                CurrentSafeLengthUnit);
         }
     }
 }
