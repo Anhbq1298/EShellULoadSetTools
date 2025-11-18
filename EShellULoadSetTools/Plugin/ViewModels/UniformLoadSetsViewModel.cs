@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using EShellULoadSetTools.Helpers.SAFEHelpers;
+using EShellULoadSetTools.Helpers.UnitConverter;
 using EShellULoadSetTools.Models;
 using EShellULoadSetTools.Services;
 
@@ -244,7 +245,19 @@ namespace EShellULoadSetTools.ViewModels
             }
 
             var safeModel = _safeConnectionService.GetSafeModel();
-            ShellUniformLoadSetImporter.Import(safeModel, SelectedRowsForImport);
+
+            double areaLoadScaleFactor = GetAreaLoadScaleFactor();
+
+            var scaledRows = SelectedRowsForImport
+                .Select(r => new UniformLoadSetRow
+                {
+                    Name = r.Name,
+                    LoadPattern = r.LoadPattern,
+                    LoadValue = r.LoadValue * areaLoadScaleFactor
+                })
+                .ToList();
+
+            ShellUniformLoadSetImporter.Import(safeModel, scaledRows);
 
             // Refresh SAFE info in case the connection changed units or model metadata.
             LoadSafeModelInfo();
@@ -463,6 +476,14 @@ namespace EShellULoadSetTools.ViewModels
                     yield return leaf;
                 }
             }
+        }
+
+        private double GetAreaLoadScaleFactor()
+        {
+            double forceScale = ForceUnitConverter.GetScaleFactor(CurrentForceUnit, CurrentSafeForceUnit);
+            double lengthScale = LengthUnitConverter.GetScaleFactor(CurrentLengthUnit, CurrentSafeLengthUnit);
+
+            return forceScale / Math.Pow(lengthScale, 2);
         }
     }
 }
