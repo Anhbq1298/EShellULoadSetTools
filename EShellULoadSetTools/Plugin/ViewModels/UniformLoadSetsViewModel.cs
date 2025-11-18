@@ -33,6 +33,7 @@ namespace EShellULoadSetTools.ViewModels
         private string _currentSafeForceUnit = "Force";
         private string _currentSafeTemperatureUnit = "Temperature";
         private readonly List<UniformLoadSetNodeViewModel> _trackedLeafNodes = new();
+        private bool _isSafeModelAttached;
 
         /// <summary>
         /// Root nodes of the TreeView.
@@ -201,6 +202,21 @@ namespace EShellULoadSetTools.ViewModels
             _safeConnectionService = safeConnectionService;
             RootNodes = new ObservableCollection<UniformLoadSetNodeViewModel>();
             SelectedRecords = new ObservableCollection<ShellUniformLoadSetRecord>();
+            IsSafeModelAttached = _safeConnectionService?.IsInitialized == true;
+        }
+
+        /// <summary>
+        /// Indicates whether a SAFE model is currently attached and available for transfers.
+        /// </summary>
+        public bool IsSafeModelAttached
+        {
+            get => _isSafeModelAttached;
+            private set
+            {
+                if (_isSafeModelAttached == value) return;
+                _isSafeModelAttached = value;
+                OnPropertyChanged();
+            }
         }
 
         public IReadOnlyList<string> GetLoadSetNames()
@@ -239,6 +255,7 @@ namespace EShellULoadSetTools.ViewModels
             if (_safeConnectionService == null)
             {
                 SetSafePlaceholders("(SAFE connection unavailable)");
+                IsSafeModelAttached = false;
                 return;
             }
 
@@ -246,10 +263,12 @@ namespace EShellULoadSetTools.ViewModels
             {
                 _safeConnectionService.Initialize();
                 LoadSafeModelInfo();
+                IsSafeModelAttached = _safeConnectionService.IsInitialized;
             }
             catch
             {
                 SetSafePlaceholders("(Unable to attach to SAFE)");
+                IsSafeModelAttached = false;
             }
         }
 
@@ -290,10 +309,12 @@ namespace EShellULoadSetTools.ViewModels
             {
                 // Each child node represents one set (ULoadSet1, ULoadSet2, ...)
                 var childNode = new UniformLoadSetNodeViewModel(group.Key, group);
+                childNode.IsExpanded = true;
                 root.Children.Add(childNode);
                 RegisterLeafNodeHandler(childNode);
             }
 
+            root.IsExpanded = true;
             RootNodes.Add(root);
 
             // Optionally select the first child by default
@@ -313,6 +334,7 @@ namespace EShellULoadSetTools.ViewModels
         {
             if (_safeConnectionService?.IsInitialized != true)
             {
+                IsSafeModelAttached = false;
                 return;
             }
 
@@ -324,10 +346,12 @@ namespace EShellULoadSetTools.ViewModels
                 CurrentSafeLengthUnit = presentUnits.lengthUnit;
                 CurrentSafeForceUnit = presentUnits.forceUnit;
                 CurrentSafeTemperatureUnit = presentUnits.temperatureUnit;
+                IsSafeModelAttached = true;
             }
             catch
             {
                 // Ignore SAFE errors and keep the default placeholder text.
+                IsSafeModelAttached = false;
             }
         }
 

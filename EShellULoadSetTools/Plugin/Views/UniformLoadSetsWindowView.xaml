@@ -123,6 +123,7 @@
                     Padding="12,4"
                     Margin="8,0,0,0"
                     HorizontalAlignment="Left"
+                    IsEnabled="{Binding IsSafeModelAttached}"
                     Click="TransferULoadSetAssignmentButton_Click" />
         </Grid>
 
@@ -162,6 +163,11 @@
                 <TreeView Grid.Row="1"
                           ItemsSource="{Binding RootNodes}"
                           SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:UniformLoadSetNodeViewModel}"
                                                   ItemsSource="{Binding Children}">

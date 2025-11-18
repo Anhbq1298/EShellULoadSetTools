@@ -20,6 +20,7 @@ namespace EShellULoadSetTools.ViewModels
     {
         private string _name;
         private bool _isPinned;
+        private bool _isExpanded;
 
         /// <summary>
         /// Text shown in the TreeView.
@@ -58,6 +59,20 @@ namespace EShellULoadSetTools.ViewModels
             {
                 if (_isPinned == value) return;
                 _isPinned = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether the node should be shown expanded in the TreeView.
+        /// </summary>
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                if (_isExpanded == value) return;
+                _isExpanded = value;
                 OnPropertyChanged();
             }
         }
