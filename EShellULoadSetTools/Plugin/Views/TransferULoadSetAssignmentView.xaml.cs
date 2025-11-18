@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using EShellULoadSetTools.ViewModels;
@@ -11,15 +12,38 @@ namespace EShellULoadSetTools.Views
             InitializeComponent();
         }
 
-        private void SelectFloorButton_Click(object sender, RoutedEventArgs e)
+        private async void SelectFloorButton_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext is not TransferULoadSetAssignmentViewModel viewModel)
             {
                 return;
             }
 
-            viewModel.RefreshSelectionFromEtabs();
-            RestorePluginAfterSelection();
+            var progressWindow = new ProgressView
+            {
+                Owner = this
+            };
+
+            progressWindow.Show();
+            progressWindow.SetIndeterminate(true, "Retrieving selected slabs from ETABS...");
+
+            try
+            {
+                await Task.Run(() => viewModel.RefreshSelectionFromEtabs());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Unable to retrieve selected slabs from ETABS:" + Environment.NewLine + ex.Message,
+                    "ETABS Selection Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            finally
+            {
+                progressWindow.Close();
+                RestorePluginAfterSelection();
+            }
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
