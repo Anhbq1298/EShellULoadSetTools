@@ -2,9 +2,9 @@ using System.Windows;
 
 namespace EShellULoadSetTools.Views
 {
-    public partial class ProgressWindow : Window
+    public partial class ProgressView : Window
     {
-        public ProgressWindow()
+        public ProgressView()
         {
             InitializeComponent();
         }
