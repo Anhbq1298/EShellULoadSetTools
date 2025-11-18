@@ -37,102 +37,43 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
             var db = sapModel.DatabaseTables;
 
-            (int tableVersion, string[] fieldKeys) tableFields;
-            try
-            {
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-            }
-            catch (InvalidOperationException)
-            {
-                bool initialized = SafeDatabaseHelper.StageEmptyTableFromMetadata(db, TableKey);
-                if (!initialized)
-                {
-                    throw;
-                }
-
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-            }
+            (int tableVersion, string[] fieldKeys) tableFields = SafeDatabaseHelper.EnsureTableFields(db, TableKey);
 
             int tableVersion = tableFields.tableVersion;
             string[] fieldKeys = tableFields.fieldKeys;
 
-            bool retriedAfterInitialization = false;
-
-            while (true)
-            {
-                int areaNameIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "unique", "area", "object", "name");
-                int loadSetIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "load set", "uniform load set", "uload set", "set");
-
-                if (areaNameIndex < 0 || loadSetIndex < 0)
+            SafeDatabaseHelper.StageTableForEditing(
+                db,
+                TableKey,
+                ref tableVersion,
+                ref fieldKeys,
+                rowList.Count,
+                keys =>
                 {
-                    throw new InvalidOperationException("SAFE table fields for area unique name or uniform load set could not be determined.");
-                }
+                    int areaNameIndex = SafeDatabaseHelper.FindFieldIndex(keys, "unique", "area", "object", "name");
+                    int loadSetIndex = SafeDatabaseHelper.FindFieldIndex(keys, "load set", "uniform load set", "uload set", "set");
 
-                int fieldCount = fieldKeys.Length;
-                string[] tableData = new string[rowList.Count * fieldCount];
+                    if (areaNameIndex < 0 || loadSetIndex < 0)
+                    {
+                        throw new InvalidOperationException("SAFE table fields for area unique name or uniform load set could not be determined.");
+                    }
 
-                for (int r = 0; r < rowList.Count; r++)
-                {
-                    var row = rowList[r];
-                    int offset = r * fieldCount;
+                    int fieldCount = keys.Length;
+                    string[] tableData = new string[rowList.Count * fieldCount];
 
-                    tableData[offset + areaNameIndex] = row.SafeUniqueName;
-                    tableData[offset + loadSetIndex] = row.UniformLoadSetName;
-                }
+                    for (int r = 0; r < rowList.Count; r++)
+                    {
+                        var row = rowList[r];
+                        int offset = r * fieldCount;
 
-                string[] fieldsKeysIncluded = fieldKeys;
+                        tableData[offset + areaNameIndex] = row.SafeUniqueName;
+                        tableData[offset + loadSetIndex] = row.UniformLoadSetName;
+                    }
 
-                int ret = db.SetTableForEditingArray(
-                    TableKey,
-                    ref tableVersion,
-                    ref fieldsKeysIncluded,
-                    rowList.Count,
-                    ref tableData);
-                if (ret == 0)
-                {
-                    break;
-                }
+                    return tableData;
+                });
 
-                if (retriedAfterInitialization)
-                {
-                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{TableKey}'.");
-                }
-
-                bool initialized = SafeDatabaseHelper.StageEmptyTableFromMetadata(db, TableKey);
-                if (!initialized)
-                {
-                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{TableKey}'.");
-                }
-
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-                tableVersion = tableFields.tableVersion;
-                fieldKeys = tableFields.fieldKeys;
-                retriedAfterInitialization = true;
-            }
-
-            bool fillImportLog = true;
-            int numFatalErrors = 0;
-            int numErrorMessages = 0;
-            int numWarningMessages = 0;
-            int numInfoMessages = 0;
-            string importLog = string.Empty;
-
-            int applyResult = db.ApplyEditedTables(
-                fillImportLog,
-                ref numFatalErrors,
-                ref numErrorMessages,
-                ref numWarningMessages,
-                ref numInfoMessages,
-                ref importLog);
-
-            if (applyResult != 0 || numFatalErrors > 0)
-            {
-                string details = string.IsNullOrWhiteSpace(importLog)
-                    ? string.Empty
-                    : $" Import log: {importLog}";
-
-                throw new InvalidOperationException($"SAFE returned error code {applyResult} when applying '{TableKey}'.{details}");
-            }
+            SafeDatabaseHelper.ApplyEditedTablesOrThrow(db, TableKey);
         }
     }
 }

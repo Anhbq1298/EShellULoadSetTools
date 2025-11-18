@@ -32,104 +32,45 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
 
             var db = sapModel.DatabaseTables;
 
-            (int tableVersion, string[] fieldKeys) tableFields;
-            try
-            {
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-            }
-            catch (InvalidOperationException)
-            {
-                bool initialized = SafeDatabaseHelper.StageEmptyTableFromMetadata(db, TableKey);
-                if (!initialized)
-                {
-                    throw;
-                }
-
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-            }
+            (int tableVersion, string[] fieldKeys) tableFields = SafeDatabaseHelper.EnsureTableFields(db, TableKey);
 
             int tableVersion = tableFields.tableVersion;
             string[] fieldKeys = tableFields.fieldKeys;
 
-            bool retriedAfterInitialization = false;
-
-            while (true)
-            {
-                int setNameIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "name", "set");
-                int patternIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "pattern", "loadpat");
-                int valueIndex = SafeDatabaseHelper.FindFieldIndex(fieldKeys, "value", "magnitude", "val");
-
-                if (setNameIndex < 0 || patternIndex < 0 || valueIndex < 0)
+            SafeDatabaseHelper.StageTableForEditing(
+                db,
+                TableKey,
+                ref tableVersion,
+                ref fieldKeys,
+                rowList.Count,
+                keys =>
                 {
-                    throw new InvalidOperationException("SAFE table fields for name, pattern, or value could not be determined.");
-                }
+                    int setNameIndex = SafeDatabaseHelper.FindFieldIndex(keys, "name", "set");
+                    int patternIndex = SafeDatabaseHelper.FindFieldIndex(keys, "pattern", "loadpat");
+                    int valueIndex = SafeDatabaseHelper.FindFieldIndex(keys, "value", "magnitude", "val");
 
-                int fieldCount = fieldKeys.Length;
-                string[] tableData = new string[rowList.Count * fieldCount];
+                    if (setNameIndex < 0 || patternIndex < 0 || valueIndex < 0)
+                    {
+                        throw new InvalidOperationException("SAFE table fields for name, pattern, or value could not be determined.");
+                    }
 
-                for (int r = 0; r < rowList.Count; r++)
-                {
-                    var row = rowList[r];
-                    int offset = r * fieldCount;
+                    int fieldCount = keys.Length;
+                    string[] tableData = new string[rowList.Count * fieldCount];
 
-                    tableData[offset + setNameIndex] = row.Name ?? string.Empty;
-                    tableData[offset + patternIndex] = row.LoadPattern ?? string.Empty;
-                    tableData[offset + valueIndex] = row.LoadValue.ToString(CultureInfo.InvariantCulture);
-                }
+                    for (int r = 0; r < rowList.Count; r++)
+                    {
+                        var row = rowList[r];
+                        int offset = r * fieldCount;
 
-                string[] fieldsKeysIncluded = fieldKeys;
+                        tableData[offset + setNameIndex] = row.Name ?? string.Empty;
+                        tableData[offset + patternIndex] = row.LoadPattern ?? string.Empty;
+                        tableData[offset + valueIndex] = row.LoadValue.ToString(CultureInfo.InvariantCulture);
+                    }
 
-                int ret = db.SetTableForEditingArray(
-                    TableKey,
-                    ref tableVersion,
-                    ref fieldsKeysIncluded,
-                    rowList.Count,
-                    ref tableData);
-                if (ret == 0)
-                {
-                    break;
-                }
+                    return tableData;
+                });
 
-                if (retriedAfterInitialization)
-                {
-                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{TableKey}'.");
-                }
-
-                bool initialized = SafeDatabaseHelper.StageEmptyTableFromMetadata(db, TableKey);
-                if (!initialized)
-                {
-                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{TableKey}'.");
-                }
-
-                tableFields = SafeDatabaseHelper.GetTableFields(db, TableKey);
-                tableVersion = tableFields.tableVersion;
-                fieldKeys = tableFields.fieldKeys;
-                retriedAfterInitialization = true;
-            }
-
-            bool fillImportLog = true;
-            int numFatalErrors = 0;
-            int numErrorMessages = 0;
-            int numWarningMessages = 0;
-            int numInfoMessages = 0;
-            string importLog = string.Empty;
-
-            ret = db.ApplyEditedTables(
-                fillImportLog,
-                ref numFatalErrors,
-                ref numErrorMessages,
-                ref numWarningMessages,
-                ref numInfoMessages,
-                ref importLog);
-
-            if (ret != 0 || numFatalErrors > 0)
-            {
-                string details = string.IsNullOrWhiteSpace(importLog)
-                    ? ""
-                    : $" Import log: {importLog}";
-
-                throw new InvalidOperationException($"SAFE returned error code {ret} when applying '{TableKey}'.{details}");
-            }
+            SafeDatabaseHelper.ApplyEditedTablesOrThrow(db, TableKey);
         }
 
     }

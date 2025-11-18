@@ -91,6 +91,101 @@ namespace EShellULoadSetTools.Helpers.SAFEHelpers
             return ret == 0 && numFatalErrors == 0;
         }
 
+        internal static (int tableVersion, string[] fieldKeys) EnsureTableFields(cDatabaseTables db, string tableKey)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            if (string.IsNullOrWhiteSpace(tableKey)) throw new ArgumentNullException(nameof(tableKey));
+
+            try
+            {
+                return GetTableFields(db, tableKey);
+            }
+            catch (InvalidOperationException)
+            {
+                if (!StageEmptyTableFromMetadata(db, tableKey))
+                {
+                    throw;
+                }
+
+                return GetTableFields(db, tableKey);
+            }
+        }
+
+        internal static void StageTableForEditing(
+            cDatabaseTables db,
+            string tableKey,
+            ref int tableVersion,
+            ref string[] fieldKeys,
+            int numberRecords,
+            Func<string[], string[]> buildTableData)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            if (string.IsNullOrWhiteSpace(tableKey)) throw new ArgumentNullException(nameof(tableKey));
+            if (buildTableData == null) throw new ArgumentNullException(nameof(buildTableData));
+
+            bool retriedAfterInitialization = false;
+
+            while (true)
+            {
+                string[] tableData = buildTableData(fieldKeys);
+                string[] fieldsKeysIncluded = fieldKeys;
+
+                int ret = db.SetTableForEditingArray(
+                    tableKey,
+                    ref tableVersion,
+                    ref fieldsKeysIncluded,
+                    numberRecords,
+                    ref tableData);
+
+                if (ret == 0)
+                {
+                    return;
+                }
+
+                if (retriedAfterInitialization)
+                {
+                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{tableKey}'.");
+                }
+
+                if (!StageEmptyTableFromMetadata(db, tableKey))
+                {
+                    throw new InvalidOperationException($"SAFE returned error code {ret} when staging '{tableKey}'.");
+                }
+
+                (tableVersion, fieldKeys) = GetTableFields(db, tableKey);
+                retriedAfterInitialization = true;
+            }
+        }
+
+        internal static void ApplyEditedTablesOrThrow(cDatabaseTables db, string tableKey, bool fillImportLog = true)
+        {
+            if (db == null) throw new ArgumentNullException(nameof(db));
+            if (string.IsNullOrWhiteSpace(tableKey)) throw new ArgumentNullException(nameof(tableKey));
+
+            int numFatalErrors = 0;
+            int numErrorMessages = 0;
+            int numWarningMessages = 0;
+            int numInfoMessages = 0;
+            string importLog = string.Empty;
+
+            int ret = db.ApplyEditedTables(
+                fillImportLog,
+                ref numFatalErrors,
+                ref numErrorMessages,
+                ref numWarningMessages,
+                ref numInfoMessages,
+                ref importLog);
+
+            if (ret != 0 || numFatalErrors > 0)
+            {
+                string details = string.IsNullOrWhiteSpace(importLog)
+                    ? string.Empty
+                    : $" Import log: {importLog}";
+
+                throw new InvalidOperationException($"SAFE returned error code {ret} when applying '{tableKey}'.{details}");
+            }
+        }
+
         internal static (int tableVersion, string[] fieldKeys) GetTableFields(cDatabaseTables db, string tableKey)
         {
             if (db == null) throw new ArgumentNullException(nameof(db));
