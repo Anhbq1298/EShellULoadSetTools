@@ -9,6 +9,7 @@
 using System;
 using System.Windows;
 using ETABSv1;
+using EShellULoadSetTools.Helpers;
 using EShellULoadSetTools.Services;
 using EShellULoadSetTools.ViewModels;
 using EShellULoadSetTools.Views;
@@ -37,9 +38,7 @@ namespace EShellULoadSetTools
                 {
                     if (ActiveWindow != null && ActiveWindow.IsVisible)
                     {
-                        ActiveWindow.Activate();
-                        ActiveWindow.Topmost = true;
-                        ActiveWindow.Topmost = false;
+                        WindowFocusHelper.BringToFront(ActiveWindow);
 
                         try
                         {

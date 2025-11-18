@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using EShellULoadSetTools.Helpers;
 using EShellULoadSetTools.ViewModels;
 
 namespace EShellULoadSetTools.Views
@@ -118,8 +119,7 @@ namespace EShellULoadSetTools.Views
 
             // Show modelessly so ETABS stays fully interactive while the transfer UI is open.
             window.Show();
-            window.Topmost = true;
-            window.Topmost = false;
+            WindowFocusHelper.BringToFront(window);
 
             _previousWindowState = WindowState;
             WindowState = WindowState.Minimized;
