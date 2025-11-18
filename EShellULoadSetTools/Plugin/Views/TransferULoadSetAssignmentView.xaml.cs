@@ -29,7 +29,7 @@ namespace EShellULoadSetTools.Views
 
             try
             {
-                await Task.Run(() => viewModel.RefreshSelectionFromEtabs());
+                await viewModel.RefreshSelectionFromEtabsAsync();
             }
             catch (Exception ex)
             {

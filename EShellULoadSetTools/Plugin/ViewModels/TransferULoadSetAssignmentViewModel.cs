@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using EShellULoadSetTools.Helpers.SAFEHelpers;
 using EShellULoadSetTools.Services;
 using EShellULoadSetTools.Models;
@@ -51,35 +52,47 @@ namespace EShellULoadSetTools.ViewModels
         /// Retrieves the currently selected floor (area) objects from the ETABS model
         /// and refreshes the bound collection.
         /// </summary>
-        public void RefreshSelectionFromEtabs()
+        public async Task RefreshSelectionFromEtabsAsync()
         {
-            SelectedFloors.Clear();
-
-            IReadOnlyList<ShellAreaIdentifier> selectedFloors = _etabsConnectionService.GetSelectedShellAreaIdentifiers();
-            var loadSetAssignments = _etabsConnectionService.GetShellAreaUniformLoadSetAssignments();
-            var safeControlPointIndex = BuildSafeControlPointIndex();
-            foreach (var floor in selectedFloors)
+            var slabRows = await Task.Run(() =>
             {
-                loadSetAssignments.TryGetValue(floor.UniqueName, out string? assignedLoadSet);
+                var rows = new List<SlabAssignmentRow>();
 
-                string? controlPointId = _etabsConnectionService.GetShellAreaControlPointIdentifier(floor.UniqueName);
-                string safeUniqueName = string.Empty;
+                IReadOnlyList<ShellAreaIdentifier> selectedFloors = _etabsConnectionService.GetSelectedShellAreaIdentifiers();
+                var loadSetAssignments = _etabsConnectionService.GetShellAreaUniformLoadSetAssignments();
+                var safeControlPointIndex = BuildSafeControlPointIndex();
 
-                if (!string.IsNullOrWhiteSpace(controlPointId) &&
-                    safeControlPointIndex.TryGetValue(controlPointId, out var safeMatches) &&
-                    safeMatches.Count > 0)
+                foreach (var floor in selectedFloors)
                 {
-                    safeUniqueName = safeMatches[0];
+                    loadSetAssignments.TryGetValue(floor.UniqueName, out string? assignedLoadSet);
+
+                    string? controlPointId = _etabsConnectionService.GetShellAreaControlPointIdentifier(floor.UniqueName);
+                    string safeUniqueName = string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(controlPointId) &&
+                        safeControlPointIndex.TryGetValue(controlPointId, out var safeMatches) &&
+                        safeMatches.Count > 0)
+                    {
+                        safeUniqueName = safeMatches[0];
+                    }
+
+                    rows.Add(new SlabAssignmentRow
+                    {
+                        EtabsGuid = floor.Guid,
+                        EtabsUniqueName = floor.UniqueName,
+                        EtabsLabel = floor.Label,
+                        AssignedLoadSet = assignedLoadSet ?? string.Empty,
+                        SafeUniqueName = safeUniqueName
+                    });
                 }
 
-                SelectedFloors.Add(new SlabAssignmentRow
-                {
-                    EtabsGuid = floor.Guid,
-                    EtabsUniqueName = floor.UniqueName,
-                    EtabsLabel = floor.Label,
-                    AssignedLoadSet = assignedLoadSet ?? string.Empty,
-                    SafeUniqueName = safeUniqueName
-                });
+                return rows;
+            });
+
+            SelectedFloors.Clear();
+            foreach (var row in slabRows)
+            {
+                SelectedFloors.Add(row);
             }
         }
 
